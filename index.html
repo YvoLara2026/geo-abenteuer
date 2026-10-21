@@ -47,9 +47,24 @@ footer{text-align:center;padding:12px;color:#536a7b;font-size:.85rem}
 </head>
 <body>
 <header><h1>🌍 Geo-Abenteuer</h1><p>Dein interaktiver Geographie-Trainer · Klasse 5 Gymnasium</p></header>
- <div style="text-align:center;padding:12px;">
-  <a href="index2.html" style="display:inline-block;background:#3569b7;color:white;padding:12px 22px;border-radius:12px;text-decoration:none;font-weight:bold;">🧮 Zum Mathe-Training</a>
-</div>
+ <section class="wrap" aria-label="Lernprogramme" style="padding-top:14px;padding-bottom:0">
+ <div class="panel">
+  <h2 style="margin:0 0 6px;text-align:center">Womit möchtest du lernen?</h2>
+  <p style="text-align:center;margin:0 0 14px;color:#526779">Wähle dein Lernabenteuer aus.</p>
+  <div class="topics">
+   <a href="index.html" style="display:block;padding:16px;border-radius:17px;background:#e4f2ff;border:2px solid #3d8bfd;color:#183153;text-decoration:none">
+    <strong style="display:block;font-size:1.15rem;margin-bottom:5px">🌍 Geo-Abenteuer</strong>
+    <span style="display:block;color:#526779">Erdbewegungen, Jahreszeiten, Kontinente und mehr üben.</span>
+    <span style="display:inline-block;margin-top:10px;padding:8px 12px;border-radius:10px;background:#3d8bfd;color:white;font-weight:bold">Geo öffnen</span>
+   </a>
+   <a href="index2.html" style="display:block;padding:16px;border-radius:17px;background:#e9fff3;border:2px solid #20a46b;color:#183153;text-decoration:none">
+    <strong style="display:block;font-size:1.15rem;margin-bottom:5px">🧮 Mathe-Training</strong>
+    <span style="display:block;color:#526779">Rechenaufgaben lösen, Antworten prüfen und Punkte sammeln.</span>
+    <span style="display:inline-block;margin-top:10px;padding:8px 12px;border-radius:10px;background:#20a46b;color:white;font-weight:bold">Mathe öffnen</span>
+   </a>
+  </div>
+ </div>
+</section>
 <main class="wrap">
 <section class="panel toprow">
  <div class="mascot" aria-hidden="true">🧭</div>
@@ -229,5 +244,4 @@ $("resetBtn").onclick=()=>{if(confirm("Möchtest du wirklich alle gespeicherten 
 load();render();
 </script>
 </body>
- <a href="index2.html" style="display:block;max-width:300px;margin:20px auto;padding:15px;background:#3569b7;color:white;text-align:center;text-decoration:none;border-radius:12px;font-weight:bold;">🧮 Zum Mathe-Training</a>
 </html>
