@@ -199,7 +199,11 @@ function checkOne(i,el){
 function stats(){$("right").textContent=totalRight;$("checked").textContent=totalChecked;$("points").textContent=points;}
 $("newRound").addEventListener("click",generate);
 $("checkAll").addEventListener("click",()=>[...$("tasks").children].forEach((el,i)=>{if(el.querySelector("input").value.trim()!=="")checkOne(i,el);}));
-if(!loadState())generate();
+// Beim Öffnen der Seite immer eine frische Runde starten.
+// Alte gespeicherte Aufgaben werden entfernt, damit nach dem Neuladen
+// nicht wieder dieselben Aufgaben erscheinen.
+try{localStorage.removeItem(SAVE_KEY);}catch(e){}
+generate();
 
 </script>
 </body>
