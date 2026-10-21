@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Geo-Abenteuer – Klasse 5</title>
+<style>
+:root{--ink:#183153;--blue:#3d8bfd;--sky:#eaf6ff;--green:#20a46b;--gold:#ffd166;--pink:#ff8fab;--paper:#fffdf6}
+*{box-sizing:border-box}body{margin:0;font-family:"Trebuchet MS",Arial,sans-serif;color:var(--ink);background:linear-gradient(135deg,#dff4ff,#fff4d9);min-height:100vh}
+header{padding:22px 16px 18px;text-align:center;background:#fffdf2;border-bottom:4px solid #bde0fe}
+h1{margin:0;font-size:clamp(1.8rem,4vw,3rem)}header p{margin:8px 0 0;font-size:1.05rem}
+.wrap{max-width:1100px;margin:auto;padding:18px}
+.panel{background:#fff;border:2px solid #d7e8f5;border-radius:22px;padding:18px;box-shadow:0 5px 0 #c7ddeb;margin-bottom:16px}
+.toprow{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.mascot{font-size:2.5rem;background:#fff0b3;border-radius:50%;width:68px;height:68px;display:grid;place-items:center;flex-shrink:0}
+.bubble{background:#fff4bf;border-radius:18px;padding:12px 16px;flex:1;min-width:180px}
+button,select,input{font:inherit}button{border:0;border-radius:13px;padding:11px 16px;background:var(--blue);color:white;font-weight:bold;cursor:pointer;box-shadow:0 3px 0 #2164bd;transition:transform .08s}
+button:hover{filter:brightness(1.05)}button:active{transform:translateY(2px);box-shadow:0 1px 0 #2164bd}button:disabled{opacity:.45;cursor:not-allowed}
+button.secondary{background:#6c7a89;box-shadow:0 3px 0 #46525e}button.green{background:var(--green);box-shadow:0 3px 0 #14764b}button.gold{background:#f2a900;box-shadow:0 3px 0 #b77f00;color:#18243a}
+.progressbar{height:13px;background:#e7edf2;border-radius:99px;overflow:hidden;margin:10px 0}.progressbar span{display:block;height:100%;background:linear-gradient(90deg,#22c55e,#8bd450);width:0%;transition:width .25s}
+.topics{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.topic{padding:14px;border-radius:17px;background:#f3faff;border:2px solid #d4eaf8;cursor:pointer;text-align:left;color:var(--ink);box-shadow:none}
+.topic.active{border-color:#3d8bfd;background:#e4f2ff}.topic.done{border-color:#55b98a;background:#e9fff3}
+.topic strong{display:block;margin-bottom:5px}.topic small{display:block;color:#526779;line-height:1.4}
+.quizhead{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center}
+.tag{background:#edf6ff;padding:6px 10px;border-radius:99px;font-size:.9rem;font-weight:bold}
+.question{font-size:1.25rem;font-weight:bold;margin:15px 0}
+.answers{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.answer{background:#f4f8fc;border:2px solid #d9e5ef;color:var(--ink);box-shadow:none;text-align:left;min-height:48px}
+.answer.chosen{border-color:#3d8bfd;background:#e3f1ff}.answer.correct{border-color:#20a46b;background:#e5fff1}.answer.wrong{border-color:#e76f51;background:#fff0eb}
+.feedback{padding:12px 14px;border-radius:14px;margin-top:14px;display:none;line-height:1.45}.feedback.show{display:block}.feedback.good{background:#e6fff0;border:2px solid #8edab0}.feedback.bad{background:#fff0eb;border:2px solid #ffc2b0}
+.visual{background:#f5fbff;border:2px dashed #b6d9f1;border-radius:18px;padding:14px;margin:12px 0;text-align:center}
+.diagram{display:flex;justify-content:center;align-items:center;gap:18px;flex-wrap:wrap;min-height:125px}
+.sun{width:75px;height:75px;border-radius:50%;display:grid;place-items:center;background:#ffd54f;box-shadow:0 0 0 10px #fff0b3;font-size:2rem}
+.earth{width:105px;height:105px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(90deg,#183e9f 0 48%,#263a52 49% 100%);color:white;font-size:2rem;position:relative;overflow:hidden;border:3px solid #285a9b}
+.earth:after{content:"";position:absolute;left:15px;top:12px;width:28px;height:20px;background:#4fc28b;border-radius:60% 35% 55% 40%;transform:rotate(-25deg)}
+.axis{font-size:.9rem;color:#526779}.diagram .arrow{font-size:2rem;color:#3d8bfd}
+.windrose{width:210px;height:210px;margin:auto;position:relative;border:3px solid #8bbfe5;border-radius:50%;background:#fff}
+.windrose button{position:absolute;width:62px;height:42px;padding:6px;box-shadow:none}.windrose .n{top:4px;left:calc(50% - 31px)}.windrose .s{bottom:4px;left:calc(50% - 31px)}.windrose .e{right:4px;top:calc(50% - 21px)}.windrose .w{left:4px;top:calc(50% - 21px)}.windrose .ne{right:23px;top:24px;background:#f2a900;color:#172a46}.windrose .se{right:23px;bottom:24px;background:#f2a900;color:#172a46}.windrose .sw{left:23px;bottom:24px;background:#f2a900;color:#172a46}.windrose .nw{left:23px;top:24px;background:#f2a900;color:#172a46}
+select,input[type=text]{padding:10px;border:2px solid #b8d4e8;border-radius:10px;background:white;max-width:100%}
+.mapgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-top:12px}
+.mapcell{padding:12px;background:#edf7ff;border:2px solid #cce4f6;border-radius:12px;text-align:center}
+.smallnote{font-size:.9rem;color:#536a7b}.summarygrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}.stat{background:#f2f9ff;border-radius:16px;padding:14px;text-align:center}.stat b{font-size:1.7rem;display:block}
+footer{text-align:center;padding:12px;color:#536a7b;font-size:.85rem}
+@media(max-width:600px){.wrap{padding:10px}.panel{padding:13px}.question{font-size:1.1rem}}
+</style>
+</head>
+<body>
+<header><h1>🌍 Geo-Abenteuer</h1><p>Dein interaktiver Geo-Trainer · Klasse 5 Gymnasium</p></header>
+<main class="wrap">
+<div style="text-align:center;margin-bottom:14px"><a href="index.html" style="display:inline-block;background:#6c7a89;color:white;padding:10px 16px;border-radius:13px;text-decoration:none;font-weight:bold">🏠 Zur Startseite</a></div>
+<section class="panel toprow">
+ <div class="mascot" aria-hidden="true">🧭</div>
+ <div class="bubble"><strong>Hallo, Weltentdecker!</strong><br>Ich bin Globus Gustav. Löse die Aufgaben, sammle Punkte und entdecke unseren Planeten. Du kannst Antworten verbessern – Übung macht dich zum Geo-Profi!</div>
+ <button class="secondary" id="resetBtn" title="Alle gespeicherten Ergebnisse löschen">Fortschritt löschen</button>
+</section>
+<section class="panel">
+ <div class="toprow"><div><h2 style="margin:0">Deine Lernreise</h2><div class="smallnote">Ein Thema hat jeweils 10 Aufgaben. Schließe ein Thema ab, um das nächste freizuschalten.</div></div><span class="tag" id="overallTag">0 von 80 Aufgaben</span></div>
+ <div class="progressbar"><span id="overallBar"></span></div>
+ <div class="topics" id="topics"></div>
+</section>
+<section class="panel" id="quizPanel">
+ <div class="quizhead"><span class="tag" id="topicTag">Thema 1</span><span class="tag" id="countTag">Aufgabe 1 von 10</span><span class="tag" id="scoreTag">Punkte: 0</span></div>
+ <div class="progressbar"><span id="topicBar"></span></div>
+ <div id="visual" class="visual"></div>
+ <div id="question" class="question"></div>
+ <div id="answerArea"></div>
+ <div id="feedback" class="feedback" role="status" aria-live="polite"></div>
+ <div class="toprow" style="margin-top:16px"><button class="secondary" id="hintBtn">💡 Tipp anzeigen</button><span id="hint" class="smallnote"></span><span style="flex:1"></span><button id="checkBtn">Antwort prüfen</button><button class="green" id="nextBtn" disabled>Weiter ➜</button></div>
+</section>
+<section class="panel" id="summaryPanel">
+ <h2>🏆 Deine Geo-Erfolge</h2><p class="smallnote">Die Übersicht wird auf diesem Gerät in deinem Browser gespeichert.</p>
+ <div class="summarygrid" id="stats"></div><div id="summaryDetails" style="margin-top:12px"></div>
+ <div class="toprow" style="margin-top:16px"><button class="gold" id="newRoundBtn" style="display:none">🔄 Neue Aufgabenrunde</button><span id="roundMessage" class="smallnote"></span></div>
+</section>
+<footer>Geo-Abenteuer · Funktioniert offline · Ergebnisse bleiben in diesem Browser gespeichert</footer>
+</main>
+<script>
+const topics = [
+{title:"Erdbewegungen",icon:"🌎",desc:"Rotation und Umlauf",items:[
+["Wie heißt die Drehung der Erde um ihre eigene Achse?","Eigenrotation","Umlauf","Sonnenreise","Eigenrotation","Die Erde dreht sich um ihre eigene Achse. Das nennt man Rotation oder Eigenrotation.","Merke: Die Erde dreht sich wie ein Kreisel."],
+["Wie lange dauert eine Erdrotation ungefähr?","24 Stunden","30 Tage","365 Tage","24 Stunden","Eine Drehung dauert ungefähr einen Tag, also 24 Stunden.","Ein Tag entsteht durch eine Drehung."],
+["Wie heißt die Bewegung der Erde um die Sonne?","Umlauf","Eigenrotation","Mondrotation","Umlauf","Die Erde umrundet die Sonne auf ihrer Bahn.","Denk an eine Laufbahn um einen Mittelpunkt."],
+["Wie lange braucht die Erde für einen Umlauf um die Sonne?","Ein Jahr","Ein Tag","Ein Monat","Ein Jahr","Ein Umlauf dauert ungefähr 365¼ Tage – also ein Jahr.","Ein Jahr hat ungefähr 365 Tage."],
+["Welche Bewegung verursacht Tag und Nacht?","Eigenrotation","Umlauf um die Sonne","Die Neigung allein","Eigenrotation","Durch die Drehung wird jede Erdseite einmal zur Sonne und wieder von ihr weg gedreht.","Welche Bewegung bringt verschiedene Orte abwechselnd ins Licht?"],
+["Welche Bewegung ist für die Länge eines Jahres wichtig?","Umlauf um die Sonne","Eigenrotation","Die Drehung des Mondes","Umlauf um die Sonne","Ein Jahr ist die Zeit für einen Umlauf der Erde um die Sonne.","Tag = Drehung, Jahr = Umlauf."],
+["Die Erde dreht sich um …","ihre eigene Achse","die Sonne als Achse","den Nordpol","ihre eigene Achse","Die Erdachse verläuft gedanklich durch Nordpol und Südpol.","Welche Linie geht durch beide Pole?"],
+["Die Erde bewegt sich auf ihrer Bahn um …","die Sonne","den Mond","den Äquator","die Sonne","Die Erde umkreist die Sonne.","Unser Sonnensystem hat die Sonne im Zentrum."],
+["Welche Aussage stimmt?","Rotation dauert etwa einen Tag.","Rotation dauert ein Jahr.","Umlauf dauert 24 Stunden.","Rotation dauert etwa einen Tag.","Die Erdrotation dauert ungefähr 24 Stunden.","Ein Tag ist viel kürzer als ein Jahr."],
+["Wie nennt man die gedachte Linie durch Nord- und Südpol?","Erdachse","Äquator","Erdumlauf","Erdachse","Die gedachte Drehachse der Erde heißt Erdachse.","Sie verläuft durch beide Pole."]]},
+{title:"Tag und Nacht",icon:"🌞",desc:"Licht und Schatten",items:[
+["Warum ist es auf der Erde Tag?","Die Sonne beleuchtet diese Erdseite.","Die Erde hört auf, sich zu drehen.","Der Mond leuchtet auf sie.","Die Sonne beleuchtet diese Erdseite.","Die Sonne beleuchtet immer eine Erdhalbkugel; dort ist Tag.","Sonne = Lichtquelle."],
+["Warum wird es Nacht?","Der Ort ist von der Sonne abgewandt.","Die Sonne geht wirklich um die Erde.","Die Sonne schaltet sich aus.","Der Ort ist von der Sonne abgewandt.","Durch die Erdrotation dreht sich der Ort auf die Nachtseite.","Die Sonne scheint weiter – nur nicht auf diese Seite."],
+["In welche Richtung dreht sich die Erde?","Von Westen nach Osten","Von Osten nach Westen","Von Norden nach Süden","Von Westen nach Osten","Die Erde rotiert von Westen nach Osten. Darum scheint die Sonne im Osten aufzugehen.","Die Sonne scheint am Morgen im Osten zu erscheinen."],
+["Wo geht die Sonne scheinbar auf?","Im Osten","Im Westen","Im Süden","Im Osten","Durch die Erdrotation sehen wir die Sonne im Osten aufgehen.","Morgens beginnt der Tag im Osten."],
+["Wo geht die Sonne scheinbar unter?","Im Westen","Im Osten","Im Norden","Im Westen","Die Sonne scheint im Westen unterzugehen.","Abends verschwindet sie scheinbar im Westen."],
+["Ist überall auf der Erde gleichzeitig Tag?","Nein","Ja","Nur im Sommer","Nein","Eine Erdseite ist beleuchtet, die gegenüberliegende liegt im Dunkeln.","Stell dir eine Kugel mit Licht von einer Seite vor."],
+["Was ist die Ursache für den Wechsel von Tag und Nacht?","Die Drehung der Erde","Der Umlauf des Mondes","Die Jahreszeiten","Die Drehung der Erde","Die Erde dreht sich in ungefähr 24 Stunden einmal um ihre Achse.","Das ist die Eigenrotation."],
+["Was beleuchtet die Erde?","Die Sonne","Der Mond","Die Sterne allein","Die Sonne","Die Sonne ist unsere wichtigste Lichtquelle.","Ohne Sonnenlicht wäre die Erde dunkel."],
+["Wenn bei uns Mittag ist, kann es anderswo …","Nacht sein","überall nur Mittag sein","keine Zeit geben","Nacht sein","Die Erde ist rund und wird nur auf einer Seite direkt von der Sonne beleuchtet.","Auf der anderen Seite ist es dunkel."],
+["Warum scheint die Sonne über den Himmel zu wandern?","Weil sich die Erde dreht","Weil sie täglich die Erde umrundet","Weil der Himmel rotiert","Weil sich die Erde dreht","Die scheinbare Bewegung der Sonne entsteht vor allem durch die Erdrotation.","Nicht die Sonne umrundet täglich die Erde."]]},
+{title:"Jahreszeiten",icon:"🌷",desc:"Achsneigung und Sonnenlicht",items:[
+["Welche vier Jahreszeiten gibt es?","Frühling, Sommer, Herbst, Winter","Regenzeit, Trockenzeit, Nacht, Tag","Morgen, Mittag, Abend, Nacht","Frühling, Sommer, Herbst, Winter","In unseren Breiten unterscheiden wir Frühling, Sommer, Herbst und Winter.","Ordne die vier Jahreszeiten im Jahreslauf."],
+["Was ist die wichtigste Ursache für die Jahreszeiten?","Die Neigung der Erdachse und der Umlauf um die Sonne","Die wechselnde Entfernung allein","Die Wolken","Die Neigung der Erdachse und der Umlauf um die Sonne","Die Erdachse ist geneigt. Im Jahreslauf erhalten die Halbkugeln unterschiedlich viel direktes Sonnenlicht.","Achte auf Sonnenstand und Tageslänge."],
+["Wenn auf der Nordhalbkugel Sommer ist, ist auf der Südhalbkugel meist …","Winter","auch Sommer","Frühling","Winter","Die Halbkugeln sind im Jahreslauf entgegengesetzt zur Sonne geneigt.","Australien liegt auf der Südhalbkugel."],
+["Warum ist es im Sommer oft wärmer?","Die Sonne steht höher und die Tage sind länger.","Die Erde ist immer viel näher an der Sonne.","Die Sonne ist heißer.","Die Sonne steht höher und die Tage sind länger.","Die Sonnenstrahlen treffen steiler auf und erwärmen den Boden stärker.","Steilere Strahlen bündeln Energie auf kleinerer Fläche."],
+["Was ist im Winter auf der Nordhalbkugel typisch?","Kurze Tage und tief stehende Sonne","Lange Tage und hoch stehende Sonne","Die Erde hört auf, sich zu drehen","Kurze Tage und tief stehende Sonne","Die Nordhalbkugel ist von der Sonne weg geneigt.","Weniger Tageslicht bedeutet meist weniger Erwärmung."],
+["Ist die Erde im Sommer auf der Nordhalbkugel immer am nächsten an der Sonne?","Nein","Ja","Nur nachts","Nein","Die Jahreszeiten entstehen nicht durch die Entfernung zur Sonne.","Die Achsneigung ist entscheidend."],
+["Wie heißt die gedachte Linie in der Mitte der Erde?","Äquator","Erdachse","Wendekreis","Äquator","Der Äquator teilt die Erde in Nord- und Südhalbkugel.","Er liegt ungefähr in der Mitte zwischen den Polen."],
+["Welche Halbkugel ist im Dezember stärker zur Sonne geneigt?","Südhalbkugel","Nordhalbkugel","Beide gleich stark","Südhalbkugel","Im Dezember ist auf der Südhalbkugel Sommer und auf der Nordhalbkugel Winter.","Denk an Weihnachten in Australien."],
+["Warum sind die Tage im Sommer länger?","Die jeweilige Halbkugel ist zur Sonne geneigt.","Die Erde dreht sich im Sommer langsamer.","Die Sonne leuchtet länger.","Die jeweilige Halbkugel ist zur Sonne geneigt.","Der beleuchtete Tagesbogen ist auf dieser Halbkugel länger.","Die Erdrotation bleibt ungefähr gleich schnell."],
+["Welche Aussage ist richtig?","Die Erdachse ist geneigt.","Die Erdachse steht senkrecht zur Umlaufbahn.","Jahreszeiten gibt es nur wegen Regen.","Die Erdachse ist geneigt.","Die Neigung der Erdachse beträgt ungefähr 23,5 Grad.","Diese Neigung sorgt für wechselnde Sonneneinstrahlung."]]},
+{title:"Aufbau der Erde",icon:"🧭",desc:"Pole, Achse und Äquator",items:[
+["Wie heißt die Hälfte nördlich des Äquators?","Nordhalbkugel","Südhalbkugel","Ozeanhalbkugel","Nordhalbkugel","Der Äquator teilt die Erde in eine Nord- und eine Südhalbkugel.","Nord liegt auf der Seite des Nordpols."],
+["Wie heißt die Hälfte südlich des Äquators?","Südhalbkugel","Nordhalbkugel","Osthalbkugel","Südhalbkugel","Südlich des Äquators liegt die Südhalbkugel.","Dort liegt zum Beispiel Australien."],
+["Wie heißt der nördlichste Punkt der Erde?","Nordpol","Südpol","Äquator","Nordpol","Der Nordpol liegt ganz im Norden der Erdachse.","Der Südpol liegt gegenüber."],
+["Wie heißt der südlichste Punkt der Erde?","Südpol","Nordpol","Äquator","Südpol","Der Südpol liegt ganz im Süden.","Er liegt in der Antarktis."],
+["Was ist der Äquator?","Eine gedachte Linie um die Mitte der Erde","Eine echte Straße","Die Erdachse","Eine gedachte Linie um die Mitte der Erde","Der Äquator ist eine gedachte Linie, die Nord- und Südhalbkugel trennt.","Er verläuft rund um die Erde."],
+["Was ist die Erdachse?","Eine gedachte Linie durch die Pole","Eine Linie um den Äquator","Die Umlaufbahn","Eine gedachte Linie durch die Pole","Die Erde dreht sich um ihre gedachte Achse.","Sie ist auf Globusmodellen oft eingezeichnet."],
+["Welche Bezeichnung passt zum Pol oben auf einem üblichen Globus?","Nordpol","Südpol","Äquator","Nordpol","Auf einem üblichen Globus ist der Nordpol oben dargestellt.","Das ist die übliche Kartendarstellung."],
+["Der Äquator teilt die Erde in …","Nordhalbkugel und Südhalbkugel","Osten und Westen","Land und Wasser","Nordhalbkugel und Südhalbkugel","Die beiden Hälften heißen Nord- und Südhalbkugel.","Halbkugel bedeutet eine Hälfte der Kugel."],
+["Was passiert bei der Erdrotation?","Die Erde dreht sich um ihre Achse.","Die Erde dreht sich um den Äquator.","Die Pole wandern täglich um die Erde.","Die Erde dreht sich um ihre Achse.","Die Erdachse ist die gedachte Linie der Drehung.","Rotation bedeutet Drehung."],
+["Welche Linie verbindet Nordpol und Südpol gedanklich durch die Erde?","Erdachse","Äquator","Wendekreis","Erdachse","Die Erdachse verläuft durch beide Pole.","Der Äquator liegt quer dazu."]]},
+{title:"Kontinente und Ozeane",icon:"🌊",desc:"Die Welt entdecken",items:[
+["Wie viele Kontinente werden in unserem Modell unterschieden?","Sieben","Fünf","Neun","Sieben","Wir unterscheiden hier sieben Kontinente: Europa, Asien, Afrika, Nordamerika, Südamerika, Australien und Antarktika.","Lerne die Namen als Liste."],
+["Welcher Kontinent liegt südlich von Europa?","Afrika","Nordamerika","Antarktika","Afrika","Afrika liegt südlich von Europa, getrennt durch das Mittelmeer.","Denk an das Mittelmeer."],
+["Welcher Kontinent ist flächenmäßig der größte?","Asien","Europa","Australien","Asien","Asien ist der größte Kontinent.","Er reicht von Westasien bis weit nach Ostasien."],
+["Welcher Kontinent liegt am Südpol?","Antarktika","Europa","Afrika","Antarktika","Antarktika umgibt den geografischen Südpol.","Dort ist es sehr kalt."],
+["Wie viele Ozeane werden meist unterschieden?","Fünf","Drei","Sieben","Fünf","Pazifik, Atlantik, Indischer, Arktischer und Südlicher Ozean.","Merke dir die fünf Namen."],
+["Welcher Ozean liegt zwischen Europa und Nordamerika?","Atlantischer Ozean","Indischer Ozean","Pazifischer Ozean","Atlantischer Ozean","Der Atlantik liegt zwischen Europa/Afrika und Amerika.","Er ist eine wichtige Verbindung zwischen den Kontinenten."],
+["Welcher Ozean ist der größte?","Pazifischer Ozean","Arktischer Ozean","Indischer Ozean","Pazifischer Ozean","Der Pazifik ist der größte Ozean.","Er liegt zwischen Asien/Australien und Amerika."],
+["Was ist ein Kontinent?","Eine große zusammenhängende Landmasse","Ein sehr tiefer Meeresteil","Ein einzelnes Land","Eine große zusammenhängende Landmasse","Kontinente sind große Landgebiete der Erde.","Ein Kontinent kann viele Länder umfassen."],
+["Was ist ein Ozean?","Eine riesige zusammenhängende Meeresfläche","Ein Gebirge","Eine Insel","Eine riesige zusammenhängende Meeresfläche","Ozeane sind die großen Meeresbecken der Erde.","Sie trennen und verbinden Kontinente."],
+["Welcher Kontinent liegt östlich von Europa und ist mit ihm verbunden?","Asien","Südamerika","Antarktika","Asien","Europa und Asien bilden zusammen die Landmasse Eurasien.","Die Grenze zwischen Europa und Asien ist teils eine Festlegung."]]},
+{title:"Deutschland & Bundesländer",icon:"🏰",desc:"16 Länder und Hauptstädte",items:[
+["Wie viele Bundesländer hat Deutschland?","16","9","12","16","Deutschland besteht aus 16 Bundesländern.","Dazu gehören auch drei Stadtstaaten."],
+["Was ist die Hauptstadt von Sachsen?","Dresden","Leipzig","Chemnitz","Dresden","Dresden ist die Landeshauptstadt Sachsens.","Leipzig ist die größte Stadt Sachsens, aber nicht die Hauptstadt."],
+["Was ist die Hauptstadt von Bayern?","München","Nürnberg","Augsburg","München","München ist die Landeshauptstadt Bayerns.","Bayern liegt im Südosten Deutschlands."],
+["Was ist die Hauptstadt von Brandenburg?","Potsdam","Cottbus","Frankfurt (Oder)","Potsdam","Potsdam ist die Landeshauptstadt Brandenburgs und liegt nahe Berlin.","Berlin ist ein eigenes Bundesland."],
+["Welches Bundesland hat die Hauptstadt Kiel?","Schleswig-Holstein","Mecklenburg-Vorpommern","Niedersachsen","Schleswig-Holstein","Kiel liegt im Norden an der Ostsee.","Merke: Kiel – Schleswig-Holstein."],
+["Welche Stadt ist die Hauptstadt von Thüringen?","Erfurt","Jena","Weimar","Erfurt","Erfurt ist die Landeshauptstadt Thüringens.","Thüringen liegt in der Mitte Deutschlands."],
+["Welche Hauptstadt gehört zu Hessen?","Wiesbaden","Frankfurt am Main","Kassel","Wiesbaden","Wiesbaden ist die Landeshauptstadt Hessens.","Frankfurt ist eine große Finanzstadt, aber nicht die Hauptstadt."],
+["Welche Stadt ist die Hauptstadt von Mecklenburg-Vorpommern?","Schwerin","Rostock","Stralsund","Schwerin","Schwerin ist die Landeshauptstadt Mecklenburg-Vorpommerns.","Rostock ist eine bekannte Hafenstadt."],
+["Welches Bundesland hat die Hauptstadt Mainz?","Rheinland-Pfalz","Saarland","Hessen","Rheinland-Pfalz","Mainz ist die Landeshauptstadt von Rheinland-Pfalz.","Mainz liegt am Rhein."],
+["Welche Hauptstadt gehört zu Baden-Württemberg?","Stuttgart","Karlsruhe","Mannheim","Stuttgart","Stuttgart ist die Landeshauptstadt Baden-Württembergs.","Das Bundesland liegt im Südwesten."]]},
+{title:"Nachbarstaaten",icon:"🗺️",desc:"Neun Länder rund um Deutschland",items:[
+["Wie viele Nachbarstaaten hat Deutschland?","Neun","Sieben","Elf","Neun","Deutschland grenzt an neun Staaten.","Zähle sie auf einer Karte rundherum."],
+["Welcher Nachbarstaat liegt nördlich von Deutschland?","Dänemark","Österreich","Schweiz","Dänemark","Dänemark liegt nördlich von Schleswig-Holstein.","Es ist Deutschlands einziger nördlicher Landnachbar."],
+["Welcher Nachbarstaat liegt östlich von Deutschland?","Polen","Frankreich","Belgien","Polen","Polen grenzt im Osten an Deutschland.","Die Oder bildet teilweise die Grenze."],
+["Welcher Nachbarstaat liegt südöstlich von Deutschland?","Tschechien","Niederlande","Luxemburg","Tschechien","Tschechien liegt südöstlich von Deutschland.","Es grenzt unter anderem an Sachsen und Bayern."],
+["Welcher Staat liegt südlich von Deutschland?","Österreich","Dänemark","Niederlande","Österreich","Österreich liegt südlich von Deutschland.","Auch die Schweiz liegt im Süden."],
+["Welcher Nachbarstaat liegt westlich von Deutschland?","Frankreich","Polen","Tschechien","Frankreich","Frankreich liegt westlich beziehungsweise südwestlich von Deutschland.","Es grenzt unter anderem an das Saarland und Rheinland-Pfalz."],
+["Welcher Staat grenzt im Westen an Deutschland und heißt wie seine Hauptstadt?","Luxemburg","Belgien","Dänemark","Luxemburg","Das Land Luxemburg grenzt im Westen an Deutschland.","Ein kleines Nachbarland."],
+["Welcher Staat liegt zwischen Deutschland und Frankreich im Westen?","Belgien","Polen","Österreich","Belgien","Belgien liegt westlich von Deutschland und nördlich von Frankreich.","Die Niederlande liegen ebenfalls im Westen."],
+["Welcher Nachbarstaat liegt im Nordwesten?","Niederlande","Österreich","Polen","Niederlande","Die Niederlande liegen nordwestlich von Deutschland.","Sie grenzen an Nordrhein-Westfalen und Niedersachsen."],
+["Welcher Staat liegt südlich von Bayern und Baden-Württemberg?","Schweiz","Dänemark","Polen","Schweiz","Die Schweiz liegt südlich von Deutschland.","Sie grenzt an Baden-Württemberg und Bayern."]]},
+{title:"Windrose & Himmelsrichtungen",icon:"🧭",desc:"Orientierung leicht gemacht",items:[
+["Welche Himmelsrichtung liegt oben auf einer üblichen Karte?","Norden","Süden","Westen","Norden","Karten sind meist so ausgerichtet, dass Norden oben liegt.","Oben = Norden, wenn nichts anderes angegeben ist."],
+["Welche Richtung liegt rechts auf einer üblichen Karte?","Osten","Westen","Süden","Osten","Wenn Norden oben ist, liegt Osten rechts.","Merke: N oben, O rechts."],
+["Welche Richtung liegt links auf einer üblichen Karte?","Westen","Osten","Norden","Westen","Westen liegt links, wenn Norden oben ist.","W steht links."],
+["Welche Richtung liegt gegenüber von Norden?","Süden","Osten","Nordosten","Süden","Norden und Süden liegen einander gegenüber.","Sie bilden eine Nord-Süd-Linie."],
+["Welche Richtung liegt zwischen Norden und Osten?","Nordosten","Südosten","Nordwesten","Nordosten","Nordosten liegt genau zwischen Norden und Osten.","Die Zwischenrichtungen liegen diagonal."],
+["Welche Richtung liegt zwischen Süden und Westen?","Südwesten","Südosten","Nordwesten","Südwesten","Südwesten liegt zwischen Süden und Westen.","Süd + West = Südwest."],
+["Wenn du nach Osten schaust, liegt Norden …","links","rechts","hinter dir","links","Drehst du dich nach Osten, zeigt deine linke Seite nach Norden.","Probiere es mit deinem Körper aus."],
+["Welche Richtung liegt zwischen Osten und Süden?","Südosten","Nordosten","Südwesten","Südosten","Südosten liegt diagonal zwischen Osten und Süden.","O + S = SO."],
+["Welche Abkürzung steht für Nordwesten?","NW","NO","SW","NW","NW bedeutet Nordwesten.","N steht für Nord, W für West."],
+["Ein Ort liegt südlich von dir. In welche Richtung musst du gehen?","Nach Süden","Nach Norden","Nach Westen","Nach Süden","Südlich bedeutet in Richtung Süden.","Auf einer normalen Karte ist Süden unten."]]}
+];
+let state={round:1,active:0,progress:topics.map(()=>({done:0,score:0,answers:[]})),questionOrder:topics.map(t=>t.items.map((_,i)=>i)),current:0,selected:null,checked:false};
+const $=id=>document.getElementById(id);
+function save(){try{localStorage.setItem("geoAbenteuerV1",JSON.stringify(state))}catch(e){}}
+function load(){try{const s=JSON.parse(localStorage.getItem("geoAbenteuerV1"));if(s&&s.progress&&s.progress.length===topics.length)state=s}catch(e){}}
+function unlocked(i){return i===0||state.progress[i-1].done>=10}
+function renderTopics(){
+ const el=$("topics");el.innerHTML="";
+ topics.forEach((t,i)=>{let p=state.progress[i],b=document.createElement("button");b.className="topic"+(i===state.active?" active":"")+(p.done>=10?" done":"");b.disabled=!unlocked(i);b.innerHTML=`<strong>${t.icon} ${i+1}. ${t.title} ${p.done>=10?"✅":""}</strong><small>${t.desc}</small><small>${p.done}/10 Aufgaben · ${p.score} Punkte ${!unlocked(i)?"· noch gesperrt":""}</small>`;b.onclick=()=>{state.active=i;state.current=Math.min(state.progress[i].done,9);state.selected=null;state.checked=false;render()};el.appendChild(b)});
+}
+function currentQ(){let t=topics[state.active],idx=state.questionOrder[state.active][state.current];return t.items[idx]}
+function visualFor(i){
+ if(i===0)return `<div class="diagram"><div class="sun">☀️<br><small>Sonne</small></div><div class="arrow">↻</div><div class="earth">🌍</div></div><div class="axis">Die Erde dreht sich um ihre Achse und bewegt sich zugleich um die Sonne.</div>`;
+ if(i===1)return `<div class="diagram"><div class="sun">☀️</div><div class="arrow">☀️ ➜</div><div class="earth">🌍</div></div><div class="axis">Eine Seite ist beleuchtet, die andere liegt im Schatten.</div>`;
+ if(i===2)return `<div class="diagram"><div class="sun">☀️</div><div class="arrow">↗</div><div class="earth" style="transform:rotate(23deg)">🌍</div></div><div class="axis">Die Erdachse ist geneigt. Im Jahreslauf ändern sich Sonnenstand und Tageslänge.</div>`;
+ if(i===3)return `<div class="diagram"><div class="earth">🌍</div></div><div class="axis">Nordpol · Erdachse · Äquator · Südpol</div>`;
+ if(i===7)return `<div class="windrose"><button class="n" onclick="rose('N')">N</button><button class="ne" onclick="rose('NO')">NO</button><button class="e" onclick="rose('O')">O</button><button class="se" onclick="rose('SO')">SO</button><button class="s" onclick="rose('S')">S</button><button class="sw" onclick="rose('SW')">SW</button><button class="w" onclick="rose('W')">W</button><button class="nw" onclick="rose('NW')">NW</button></div><div class="axis">Klicke eine Richtung an, um sie in einer kleinen Übung zu erkennen.</div>`;
+ if(i===4)return `<div style="font-size:2.5rem">🌍 🧩 🌊</div><div class="axis">Kontinente sind große Landmassen, Ozeane sind riesige Meeresflächen.</div>`;
+ if(i===5)return `<div style="font-size:2.5rem">🇩🇪 🏙️ 🏞️</div><div class="axis">Deutschland besteht aus 16 Bundesländern. Jedes hat eine Landeshauptstadt.</div>`;
+ if(i===6)return `<div style="font-size:2.5rem">🇩🇪 ↔ 🇩🇰 🇵🇱 🇨🇿 🇦🇹 🇨🇭 🇫🇷 🇱🇺 🇧🇪 🇳🇱</div><div class="axis">Deutschland hat neun Nachbarstaaten.</div>`;
+ return `<div style="font-size:2.5rem">🧭 N · O · S · W</div><div class="axis">Die Windrose zeigt die vier Hauptrichtungen und vier Zwischenrichtungen.</div>`;
+}
+window.rose=function(v){$("hint").textContent="Du hast "+({N:"Norden",NO:"Nordosten",O:"Osten",SO:"Südosten",S:"Süden",SW:"Südwesten",W:"Westen",NW:"Nordwesten"}[v])+" angeklickt. Schau, wo die Richtung auf der Windrose liegt!";};
+function renderQuestion(){
+ let i=state.active,t=topics[i],q=currentQ(),p=state.progress[i];$("topicTag").textContent=`${t.icon} Thema ${i+1}: ${t.title}`;$("countTag").textContent=`Aufgabe ${state.current+1} von 10`;$("scoreTag").textContent=`Punkte: ${p.score}`;$("topicBar").style.width=(p.done*10)+"%";$("visual").innerHTML=visualFor(i);$("question").textContent=q[0];$("feedback").className="feedback";$("feedback").textContent="";$("hint").textContent="";$("checkBtn").disabled=false;$("nextBtn").disabled=true;
+ const area=$("answerArea");area.innerHTML="";state.selected=null;state.checked=false;
+ let opts=[q[1],q[2],q[3]].sort(()=>Math.random()-.5);
+ opts.forEach((a,j)=>{let b=document.createElement("button");b.className="answer";b.textContent=String.fromCharCode(65+j)+") "+a;b.onclick=()=>{if(state.checked)return;state.selected=a;[...area.children].forEach(x=>x.classList.remove("chosen"));b.classList.add("chosen")};area.appendChild(b)});
+}
+function renderSummary(){
+ let done=state.progress.reduce((a,p)=>a+p.done,0),score=state.progress.reduce((a,p)=>a+p.score,0);$("overallTag").textContent=`${done} von ${topics.length*10} Aufgaben`; $("overallBar").style.width=(done/(topics.length*10)*100)+"%";
+ $("stats").innerHTML=`<div class="stat"><b>${score}</b>Punkte insgesamt</div><div class="stat"><b>${done}/${topics.length*10}</b>Aufgaben geschafft</div><div class="stat"><b>${Math.round(done/(topics.length*10)*100)}%</b>Gesamtfortschritt</div><div class="stat"><b>${state.round}</b>Aufgabenrunde</div>`;
+ $("summaryDetails").innerHTML=topics.map((t,i)=>`<div style="margin:8px 0;padding:10px;border-radius:12px;background:#f5faff"><strong>${t.icon} ${t.title}</strong> — ${state.progress[i].done}/10 abgeschlossen · ${state.progress[i].score} Punkte<div class="progressbar"><span style="width:${state.progress[i].done*10}%"></span></div></div>`).join("");
+ const all=state.progress.every(p=>p.done>=10);$("newRoundBtn").style.display=all?"inline-block":"none";$("roundMessage").textContent=all?"Fantastisch! Du hast alle Themen abgeschlossen. Jetzt kannst du eine neue Runde starten.":"Schließe alle Themen ab, damit die nächste Aufgabenrunde freigeschaltet wird.";
+}
+function render(){renderTopics();renderQuestion();renderSummary();save()}
+$("hintBtn").onclick=()=>{$("hint").textContent=currentQ()[6]};
+$("checkBtn").onclick=()=>{
+ if(state.selected===null){$("feedback").className="feedback show bad";$("feedback").textContent="Wähle zuerst eine Antwort aus.";return}
+ const q=currentQ(),right=state.selected===q[4],fb=$("feedback");
+ state.checked=true;$("checkBtn").disabled=true;$("nextBtn").disabled=false;
+ [...$("answerArea").children].forEach(b=>{let val=b.textContent.slice(3);if(val===q[4])b.classList.add("correct");else if(val===state.selected&&!right)b.classList.add("wrong")});
+ if(right){fb.className="feedback show good";fb.innerHTML="🎉 <strong>Richtig!</strong> "+q[5];let p=state.progress[state.active];if(!p.answers[state.current]){p.score+=1;p.done=Math.max(p.done,state.current+1);p.answers[state.current]=true}}
+ else{fb.className="feedback show bad";fb.innerHTML="Fast! Versuche es noch einmal. Tipp: "+q[6];state.checked=false;$("checkBtn").disabled=false;$("checkBtn").textContent="Erneut prüfen";$("nextBtn").disabled=true}
+ renderTopics();renderSummary();$("scoreTag").textContent=`Punkte: ${state.progress[state.active].score}`;save();
+};
+$("nextBtn").onclick=()=>{
+ let p=state.progress[state.active];
+ if(!p.answers[state.current]){ // allow retry before advancing
+   if(!state.checked){return}
+   if(state.selected!==currentQ()[4]){state.checked=false;renderQuestion();return}
+ }
+ if(state.current<9)state.current++;
+ else if(p.done>=10&&state.active<topics.length-1&&unlocked(state.active+1)){state.active++;state.current=0}
+ else if(p.done<10){$("feedback").className="feedback show bad";$("feedback").textContent="Beantworte diese Aufgabe richtig, bevor du weitergehst.";return}
+ state.selected=null;state.checked=false;render();
+};
+$("newRoundBtn").onclick=()=>{if(!state.progress.every(p=>p.done>=10))return;state.round++;state.progress=topics.map(()=>({done:0,score:0,answers:[]}));state.questionOrder=topics.map(t=>t.items.map((_,i)=>i).sort(()=>Math.random()-.5));state.active=0;state.current=0;state.selected=null;state.checked=false;render()};
+$("resetBtn").onclick=()=>{if(confirm("Möchtest du wirklich alle gespeicherten Ergebnisse löschen?")){localStorage.removeItem("geoAbenteuerV1");state={round:1,active:0,progress:topics.map(()=>({done:0,score:0,answers:[]})),questionOrder:topics.map(t=>t.items.map((_,i)=>i)),current:0,selected:null,checked:false};render()}};
+load();render();
+</script>
+</body>
+</html>
