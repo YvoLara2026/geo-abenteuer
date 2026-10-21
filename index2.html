@@ -172,10 +172,11 @@ function render(savedAnswers=[]){
       else el.querySelector(".solutionBtn").textContent="Musterlösung anzeigen";
       saveState();
     });
-    if(t.done){
-      el.querySelector("input").disabled=true;el.querySelector(".check").disabled=true;
-      const ok=Boolean(t.wasCorrect);const fb=el.querySelector(".feedback");
-      fb.textContent=ok?"Richtig! Sehr gut! Dein Rechenweg bleibt zum Nachvollziehen stehen.":`Noch nicht ganz. Richtige Lösung: ${t.answer}${t.unit ? " "+t.unit : ""}${t.explain ? " – "+t.explain : ""}. Du kannst die Musterlösung zusätzlich öffnen.`;
+    if(t.done || t.lastFeedback){
+      const fb=el.querySelector(".feedback");
+      const ok=Boolean(t.wasCorrect);
+      if(t.done){el.querySelector("input").disabled=true;el.querySelector(".check").disabled=true;}
+      fb.textContent=ok?"Richtig! Sehr gut! Dein Rechenweg bleibt zum Nachvollziehen stehen.":`Noch nicht ganz. Versuche es noch einmal. ${t.explain ? "Tipp: "+t.explain : ""}`;
       fb.className="feedback show "+(ok?"correct":"wrong");
     }
     if(saved.solutionOpen){const box=el.querySelector(".solution");box.hidden=false;box.textContent=`Lösung: ${t.answer}${t.unit ? " "+t.unit : ""}${t.explain ? " — Tipp: "+t.explain : ""}`;el.querySelector(".solutionBtn").textContent="Musterlösung ausblenden";}
@@ -186,12 +187,14 @@ function checkOne(i,el){
   const t=current[i];if(t.done)return;
   const input=el.querySelector("input"),feedback=el.querySelector(".feedback");
   const user=normalize(input.value),ans=normalize(t.answer);
+  if(!user){feedback.textContent="Gib zuerst eine Antwort ein.";feedback.className="feedback show wrong";return;}
   let ok=user===ans;
   if(!ok && !/[a-z]/i.test(ans) && /^-?\d+(\.\d+)?$/.test(user))ok=Number(user)===Number(ans);
-  t.done=true;t.wasCorrect=ok;totalChecked++;
-  if(ok){totalRight++;points++;feedback.textContent="Richtig! Sehr gut! Dein Rechenweg bleibt zum Nachvollziehen stehen.";feedback.className="feedback show correct";}
-  else{feedback.textContent=`Noch nicht ganz. Richtige Lösung: ${t.answer}${t.unit ? " "+t.unit : ""}${t.explain ? " – "+t.explain : ""}. Du kannst die Musterlösung zusätzlich öffnen.`;feedback.className="feedback show wrong";}
-  input.disabled=true;el.querySelector(".check").disabled=true;stats();saveState();
+  if(!t.attempted){totalChecked++;t.attempted=true;}
+  t.lastFeedback=true;t.wasCorrect=ok;
+  if(ok){t.done=true;totalRight++;points++;feedback.textContent="Richtig! Sehr gut! Dein Rechenweg bleibt zum Nachvollziehen stehen.";feedback.className="feedback show correct";input.disabled=true;el.querySelector(".check").disabled=true;}
+  else{feedback.textContent=`Noch nicht ganz. Versuche es noch einmal.${t.explain ? " Tipp: "+t.explain : ""}`;feedback.className="feedback show wrong";}
+  stats();saveState();
 }
 function stats(){$("right").textContent=totalRight;$("checked").textContent=totalChecked;$("points").textContent=points;}
 $("newRound").addEventListener("click",generate);
