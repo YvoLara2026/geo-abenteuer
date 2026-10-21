@@ -189,8 +189,8 @@ function checkOne(i,el){
   let ok=user===ans;
   if(!ok && !/[a-z]/i.test(ans) && /^-?\d+(\.\d+)?$/.test(user))ok=Number(user)===Number(ans);
   t.done=true;t.wasCorrect=ok;totalChecked++;
-  if(ok){totalRight++;points++;feedback.textContent="Richtig! Sehr gut! Dein Rechenweg bleibt zum Nachvollziehen stehen.";feedback.className="feedback correct";}
-  else{feedback.textContent=`Noch nicht ganz. Richtige Lösung: ${t.answer}${t.unit ? " "+t.unit : ""}${t.explain ? " – "+t.explain : ""}. Du kannst die Musterlösung zusätzlich öffnen.`;feedback.className="feedback wrong";}
+  if(ok){totalRight++;points++;feedback.textContent="Richtig! Sehr gut! Dein Rechenweg bleibt zum Nachvollziehen stehen.";feedback.className="feedback show correct";}
+  else{feedback.textContent=`Noch nicht ganz. Richtige Lösung: ${t.answer}${t.unit ? " "+t.unit : ""}${t.explain ? " – "+t.explain : ""}. Du kannst die Musterlösung zusätzlich öffnen.`;feedback.className="feedback show wrong";}
   input.disabled=true;el.querySelector(".check").disabled=true;stats();saveState();
 }
 function stats(){$("right").textContent=totalRight;$("checked").textContent=totalChecked;$("points").textContent=points;}
