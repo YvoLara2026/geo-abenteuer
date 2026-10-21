@@ -5,27 +5,44 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Mathe-Training Klasse 5</title>
 <style>
-:root{--ink:#24324a;--blue:#3569b7;--pale:#eef4ff;--green:#26734d;--red:#b43c3c;--line:#d9e2f0}
-*{box-sizing:border-box}body{margin:0;background:#f4f7fc;color:var(--ink);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
-header{background:linear-gradient(135deg,#244a85,#5089d8);color:white;padding:26px 18px;text-align:center}
-header h1{margin:0 0 6px;font-size:clamp(1.6rem,4vw,2.3rem)}header p{margin:0;opacity:.95}
-main{max-width:900px;margin:22px auto;padding:0 14px 40px}
-.panel,.task{background:white;border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:16px;box-shadow:0 3px 12px #203b6410}
-.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
-select,button,input{font:inherit;border-radius:10px;padding:10px 12px;border:1px solid #bac8dd}
-select{background:white;flex:1;min-width:210px}button{cursor:pointer;background:var(--blue);color:white;border-color:var(--blue);font-weight:650}button.secondary{background:white;color:var(--blue)}button:focus,input:focus,select:focus{outline:3px solid #9ec4ff;outline-offset:1px}
-.stats{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px}.stat{background:var(--pale);padding:8px 12px;border-radius:10px;font-weight:650}
-.task h3{margin:0 0 10px;font-size:1.08rem}.taskrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.equation{font-size:1.15rem;font-weight:700;flex:1;min-width:220px}.answer{width:170px;max-width:100%;background:#fff}
-.feedback{margin-top:8px;font-weight:650}.correct{color:var(--green)}.wrong{color:var(--red)}.hint{font-size:.93rem;color:#52647d}.footer{font-size:.9rem;color:#60708a;text-align:center;margin-top:20px}
-@media(max-width:520px){.taskrow{align-items:stretch}.equation{min-width:100%}.answer{flex:1;width:100%}button{flex:1}}
+:root{--ink:#183153;--blue:#3d8bfd;--sky:#eaf6ff;--green:#20a46b;--gold:#ffd166;--pink:#ff8fab;--paper:#fffdf6;--line:#d7e8f5;--muted:#526779}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Trebuchet MS",Arial,sans-serif;color:var(--ink);background:linear-gradient(135deg,#dff4ff,#fff4d9);min-height:100vh;font-size:16px;line-height:1.45}
+header{padding:22px 16px 18px;text-align:center;background:#fffdf2;border-bottom:4px solid #bde0fe}
+header h1{margin:0;font-size:clamp(1.8rem,4vw,3rem);font-weight:800}
+header p{margin:8px 0 0;font-size:1.05rem}
+main{max-width:1100px;margin:auto;padding:18px 18px 34px}
+.toplink{text-align:center;margin:0 0 18px}
+a.home-link{display:inline-block;background:#6c7a89;color:white;padding:10px 16px;border-radius:13px;text-decoration:none;font-weight:bold;box-shadow:0 3px 0 #46525e}
+.panel,.task{background:#fff;border:2px solid var(--line);border-radius:22px;padding:18px;margin-bottom:16px;box-shadow:0 5px 0 #c7ddeb}
+.panel strong{font-size:1.05rem}
+.controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+select,button,input{font:inherit;border-radius:13px;padding:11px 16px;border:0}
+select{background:#f4f8fc;border:2px solid #d9e5ef;color:var(--ink);flex:1;min-width:210px}
+button{cursor:pointer;background:var(--blue);color:white;font-weight:bold;box-shadow:0 3px 0 #2164bd;transition:transform .08s}
+button:hover{filter:brightness(1.05)}button:active{transform:translateY(2px);box-shadow:0 1px 0 #2164bd}button:disabled{opacity:.45;cursor:not-allowed}
+button.secondary{background:#6c7a89;box-shadow:0 3px 0 #46525e}button.green{background:var(--green);box-shadow:0 3px 0 #14764b}
+.stats{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px}
+.stat{background:#eef6ff;padding:8px 12px;border-radius:99px;font-size:.95rem;font-weight:bold}
+.task h3{margin:0 0 10px;font-size:1.1rem;color:var(--ink)}
+.taskrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.equation{font-size:1.25rem;font-weight:bold;flex:1;min-width:220px}
+.answer{width:190px;max-width:100%;background:#f4f8fc;border:2px solid #d9e5ef;color:var(--ink)}
+.feedback{margin-top:10px;font-weight:650;padding:10px 12px;border-radius:12px;display:none}
+.feedback.show{display:block}.correct{color:#176b43;background:#e6fff0}.wrong{color:#a52d35;background:#fff0eb}
+.hint{font-size:.93rem;color:#526779}.work{width:100%;min-height:82px;resize:vertical;margin-top:10px;border:2px solid #d9e5ef;border-radius:13px;padding:12px;font:inherit;color:var(--ink);background:#f8fbff}
+.solution{margin-top:10px;padding:12px;background:#fff3bf;border-radius:13px;border:1px solid #f4d98b}.taskbuttons{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.footer{font-size:.9rem;color:#526779;text-align:center;margin-top:20px}
+@media(max-width:600px){main{padding:14px 10px 28px}.panel,.task{padding:14px}.taskrow{align-items:stretch}.equation{min-width:100%}.answer{flex:1;width:100%}button{flex:1}}
 </style>
 </head>
 <body>
 <header>
-  <h1>🧠 Mathe-Training – Klasse 5</h1>
-  <p>Üben, prüfen und besser werden – ohne Zahlenstrahl!</p>
+  <h1>🧮 Mathe-Training</h1>
+  <p>Dein interaktiver Mathe-Trainer · Klasse 5 Gymnasium</p>
 </header>
 <main>
+  <div class="toplink"><a class="home-link" href="index.html">🌍 Zurück zum Geo-Abenteuer</a></div>
   <section class="panel">
     <strong>Wähle ein Thema:</strong>
     <div class="controls" style="margin-top:10px">
@@ -47,7 +64,7 @@ select{background:white;flex:1;min-width:210px}button{cursor:pointer;background:
       <div class="stat">Geprüft: <span id="checked">0</span> / 10</div>
       <div class="stat">Punkte in dieser Runde: <span id="points">0</span></div>
     </div>
-    <p class="hint">Tipp: Bei Umrechnungen steht die Einheit schon in der Aufgabe. Gib nur die Zahl ein. Bei Division mit Rest schreibst du zum Beispiel <b>13 Rest 2</b>.</p>
+    <p class="hint">Tipp: Du kannst zu jeder Aufgabe deinen Rechenweg notieren. Das Programm prüft automatisch das Ergebnis; den freien Text zum Rechenweg bewertet es nicht automatisch. Bei Division mit Rest schreibst du zum Beispiel <b>13 Rest 2</b>.</p>
   </section>
   <section id="tasks" aria-live="polite"></section>
   <section class="panel">
@@ -118,11 +135,17 @@ function render(){
   $("tasks").innerHTML="";
   current.forEach((t,i)=>{
     const el=document.createElement("article");el.className="task";
-    el.innerHTML=`<h3>Aufgabe ${i+1}</h3><div class="taskrow"><div class="equation"></div><input class="answer" type="text" autocomplete="off" aria-label="Antwort zu Aufgabe ${i+1}" placeholder="Deine Antwort"><button class="check">Prüfen</button></div><div class="feedback" aria-live="polite"></div>`;
+    el.innerHTML=`<h3>Aufgabe ${i+1}</h3><div class="taskrow"><div class="equation"></div><input class="answer" type="text" autocomplete="off" aria-label="Antwort zu Aufgabe ${i+1}" placeholder="Deine Antwort"><button class="check">Prüfen</button></div><label style="display:block;margin-top:12px;font-weight:650" for="work-${i}">Mein Rechenweg (optional)</label><textarea class="work" id="work-${i}" placeholder="Schreibe deine Zwischenschritte auf …"></textarea><div class="taskbuttons"><button class="secondary solutionBtn" type="button">Musterlösung anzeigen</button></div><div class="solution" hidden></div><div class="feedback" aria-live="polite"></div>`;
     el.querySelector(".equation").textContent=t.question;
     el.querySelector("input").value="";
     el.querySelector(".check").addEventListener("click",()=>checkOne(i,el));
     el.querySelector("input").addEventListener("keydown",e=>{if(e.key==="Enter")checkOne(i,el);});
+    el.querySelector(".solutionBtn").addEventListener("click",()=>{
+      const box=el.querySelector(".solution");
+      box.hidden=!box.hidden;
+      if(!box.hidden){box.textContent=`Lösung: ${t.answer}${t.unit ? " "+t.unit : ""}${t.explain ? " — Tipp: "+t.explain : ""}`;el.querySelector(".solutionBtn").textContent="Musterlösung ausblenden";}
+      else el.querySelector(".solutionBtn").textContent="Musterlösung anzeigen";
+    });
     $("tasks").appendChild(el);
   });
 }
@@ -133,8 +156,8 @@ function checkOne(i,el){
   let ok=user===ans;
   if(!ok && !/[a-z]/i.test(ans) && /^-?\d+(\.\d+)?$/.test(user))ok=Number(user)===Number(ans);
   t.done=true;totalChecked++;
-  if(ok){totalRight++;points++;feedback.textContent="Richtig! Sehr gut!";feedback.className="feedback correct";}
-  else{feedback.textContent=`Noch nicht ganz. Richtige Lösung: ${t.answer}${t.unit ? " "+t.unit : ""}${t.explain ? " – "+t.explain : ""}`;feedback.className="feedback wrong";}
+  if(ok){totalRight++;points++;feedback.textContent="Richtig! Sehr gut! Dein Rechenweg bleibt zum Nachvollziehen stehen.";feedback.className="feedback correct";}
+  else{feedback.textContent=`Noch nicht ganz. Richtige Lösung: ${t.answer}${t.unit ? " "+t.unit : ""}${t.explain ? " – "+t.explain : ""}. Du kannst die Musterlösung zusätzlich öffnen.`;feedback.className="feedback wrong";}
   input.disabled=true;el.querySelector(".check").disabled=true;stats();
 }
 function stats(){$("right").textContent=totalRight;$("checked").textContent=totalChecked;$("points").textContent=points;}
