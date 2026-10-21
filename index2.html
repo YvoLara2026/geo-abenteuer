@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mathe-Training Klasse 5</title>
+<style>
+:root{--ink:#24324a;--blue:#3569b7;--pale:#eef4ff;--green:#26734d;--red:#b43c3c;--line:#d9e2f0}
+*{box-sizing:border-box}body{margin:0;background:#f4f7fc;color:var(--ink);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+header{background:linear-gradient(135deg,#244a85,#5089d8);color:white;padding:26px 18px;text-align:center}
+header h1{margin:0 0 6px;font-size:clamp(1.6rem,4vw,2.3rem)}header p{margin:0;opacity:.95}
+main{max-width:900px;margin:22px auto;padding:0 14px 40px}
+.panel,.task{background:white;border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:16px;box-shadow:0 3px 12px #203b6410}
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+select,button,input{font:inherit;border-radius:10px;padding:10px 12px;border:1px solid #bac8dd}
+select{background:white;flex:1;min-width:210px}button{cursor:pointer;background:var(--blue);color:white;border-color:var(--blue);font-weight:650}button.secondary{background:white;color:var(--blue)}button:focus,input:focus,select:focus{outline:3px solid #9ec4ff;outline-offset:1px}
+.stats{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px}.stat{background:var(--pale);padding:8px 12px;border-radius:10px;font-weight:650}
+.task h3{margin:0 0 10px;font-size:1.08rem}.taskrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.equation{font-size:1.15rem;font-weight:700;flex:1;min-width:220px}.answer{width:170px;max-width:100%;background:#fff}
+.feedback{margin-top:8px;font-weight:650}.correct{color:var(--green)}.wrong{color:var(--red)}.hint{font-size:.93rem;color:#52647d}.footer{font-size:.9rem;color:#60708a;text-align:center;margin-top:20px}
+@media(max-width:520px){.taskrow{align-items:stretch}.equation{min-width:100%}.answer{flex:1;width:100%}button{flex:1}}
+</style>
+</head>
+<body>
+<header>
+  <h1>🧠 Mathe-Training – Klasse 5</h1>
+  <p>Üben, prüfen und besser werden – ohne Zahlenstrahl!</p>
+</header>
+<main>
+  <section class="panel">
+    <strong>Wähle ein Thema:</strong>
+    <div class="controls" style="margin-top:10px">
+      <select id="topic" aria-label="Übungsthema">
+        <option value="mix">Gemischte Runde</option>
+        <option value="zahlen">Vorgänger und Nachfolger</option>
+        <option value="sub">Subtraktion</option>
+        <option value="um">Schwieriges Umrechnen</option>
+        <option value="klammern">Klammeraufgaben</option>
+        <option value="division">Division ohne Rest</option>
+        <option value="rest">Division mit Rest</option>
+        <option value="mal">Multiplikation</option>
+      </select>
+      <button id="newRound">Neue Aufgaben</button>
+      <button class="secondary" id="checkAll">Alle prüfen</button>
+    </div>
+    <div class="stats">
+      <div class="stat">Richtig: <span id="right">0</span></div>
+      <div class="stat">Geprüft: <span id="checked">0</span> / 10</div>
+      <div class="stat">Punkte in dieser Runde: <span id="points">0</span></div>
+    </div>
+    <p class="hint">Tipp: Bei Umrechnungen steht die Einheit schon in der Aufgabe. Gib nur die Zahl ein. Bei Division mit Rest schreibst du zum Beispiel <b>13 Rest 2</b>.</p>
+  </section>
+  <section id="tasks" aria-live="polite"></section>
+  <section class="panel">
+    <strong>So lernst du am besten:</strong>
+    <p style="margin-bottom:0">Rechne zuerst selbst. Prüfe danach deine Antwort. Lies bei Fehlern die richtige Lösung und starte eine neue Runde.</p>
+  </section>
+  <div class="footer">Mathe-Training · Klasse 5 · Die Aufgaben werden bei jeder Runde neu erstellt.</div>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+let current=[], totalRight=0, totalChecked=0, points=0;
+const rnd=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
+const fmt=n=>String(n).replace(/\B(?=(\d{3})+(?!\d))/g," ");
+function task(question, answer, unit="", explain=""){return {question,answer:String(answer),unit,explain};}
+function make(type){
+  if(type==="zahlen"){
+    let n=[rnd(1000,99999),rnd(1000,99999),rnd(10000,99999)][rnd(0,2)];
+    return [task(`Vorgänger von ${fmt(n)}?`,n-1),task(`Nachfolger von ${fmt(n)}?`,n+1)];
+  }
+  if(type==="sub"){
+    let a=rnd(2000,50000),b=rnd(100,Math.min(a-1,19999));
+    return [task(`${fmt(a)} − ${fmt(b)} =`,a-b,"","Ziehe Hunderter, Zehner und Einer nacheinander ab.")];
+  }
+  if(type==="um"){
+    const choices=[
+      ()=>{let x=rnd(12,95)*1000+rnd(0,9)*100+rnd(0,9)*10;return task(`${fmt(x)} m = ? km und m (Antwort z. B. 3 km 250 m)`,`${Math.floor(x/1000)} km ${x%1000} m`,"","1 km = 1 000 m.")},
+      ()=>{let x=rnd(2,15)*1000+rnd(1,9)*100+rnd(1,9)*10+rnd(1,9);return task(`${fmt(x)} g = ? kg und g (Antwort z. B. 2 kg 350 g)`,`${Math.floor(x/1000)} kg ${x%1000} g`,"","1 kg = 1 000 g.")},
+      ()=>{let m=rnd(2,25),c=rnd(1,99);let x=m*100+c;return task(`${fmt(x)} cm = ? m und cm (Antwort z. B. 2 m 35 cm)`,`${Math.floor(x/100)} m ${x%100} cm`,"","100 cm = 1 m.")},
+      ()=>{let kg=rnd(1,18),g=rnd(100,999);let x=kg*1000+g;return task(`${fmt(x)} g = ? kg und g (Antwort z. B. 4 kg 125 g)`,`${Math.floor(x/1000)} kg ${x%1000} g`,"","1 000 g = 1 kg.")},
+      ()=>{let km=rnd(1,12),m=rnd(100,999);let x=km*1000+m;return task(`${fmt(x)} m = ? km und m (Antwort z. B. 4 km 125 m)`,`${Math.floor(x/1000)} km ${x%1000} m`,"","1 000 m = 1 km.")},
+      ()=>{let m=rnd(2,35),cm=rnd(1,99);let x=m*100+cm;return task(`${fmt(x)} cm = ? mm`,x*10,"mm","1 cm = 10 mm.")},
+      ()=>{let l=rnd(2,15),ml=rnd(100,999);let x=l*1000+ml;return task(`${fmt(x)} ml = ? l und ml (Antwort z. B. 3 l 250 ml)`,`${Math.floor(x/1000)} l ${x%1000} ml`,"","1 l = 1 000 ml.")}
+    ];return [choices[rnd(0,choices.length-1)]()];
+  }
+  if(type==="klammern"){
+    const a=rnd(20,180),b=rnd(10,90),c=rnd(5,50);
+    const kind=rnd(0,3);
+    if(kind===0)return [task(`(${a} + ${b}) − ${c} =`,a+b-c)];
+    if(kind===1)return [task(`${a+b} − (${a} + ${c}) =`,b-c<0?Math.abs(b-c):b-c,"","Rechne zuerst in der Klammer.")].map(t=>{if(Number(t.answer)<0){t.answer=String(a+b-(a+c));}return t;});
+    if(kind===2){let x=rnd(4,15),y=rnd(4,15);return [task(`(${x} × ${y}) + ${a} =`,x*y+a)];}
+    let d=rnd(3,9),q=rnd(5,25);return [task(`(${q*d} − ${d*2}) : ${d} =`,q-2)];
+  }
+  if(type==="division"){
+    let d=rnd(3,12),q=rnd(12,250);return [task(`${fmt(d*q)} : ${d} =`,q)];
+  }
+  if(type==="rest"){
+    let d=rnd(4,12),q=rnd(8,80),r=rnd(1,d-1);return [task(`${fmt(d*q+r)} : ${d} = ? (Ergebnis und Rest)`,`${q} Rest ${r}`)];
+  }
+  if(type==="mal"){
+    let a=rnd(12,999),b=rnd(3,25);return [task(`${fmt(a)} × ${b} =`,a*b)];
+  }
+  const types=["zahlen","sub","um","klammern","division","rest","mal"];
+  return make(types[rnd(0,types.length-1)]);
+}
+function normalize(s){return String(s).toLowerCase().trim().replace(/,/g,".").replace(/\s+/g," ").replace(/kilometer/g,"km").replace(/meter/g,"m").replace(/gramm/g,"g").replace(/kilogramm/g,"kg").replace(/liter/g,"l").replace(/milliliter/g,"ml");}
+function generate(){
+  current=[];totalRight=0;totalChecked=0;points=0;
+  const type=$("topic").value;
+  let attempts=0;
+  while(current.length<10 && attempts<100){
+    attempts++;
+    const t=make(type);
+    t.forEach(x=>{if(current.length<10)current.push({...x,id:current.length,done:false});});
+  }
+  render();stats();
+}
+function render(){
+  $("tasks").innerHTML="";
+  current.forEach((t,i)=>{
+    const el=document.createElement("article");el.className="task";
+    el.innerHTML=`<h3>Aufgabe ${i+1}</h3><div class="taskrow"><div class="equation"></div><input class="answer" type="text" autocomplete="off" aria-label="Antwort zu Aufgabe ${i+1}" placeholder="Deine Antwort"><button class="check">Prüfen</button></div><div class="feedback" aria-live="polite"></div>`;
+    el.querySelector(".equation").textContent=t.question;
+    el.querySelector("input").value="";
+    el.querySelector(".check").addEventListener("click",()=>checkOne(i,el));
+    el.querySelector("input").addEventListener("keydown",e=>{if(e.key==="Enter")checkOne(i,el);});
+    $("tasks").appendChild(el);
+  });
+}
+function checkOne(i,el){
+  const t=current[i];if(t.done)return;
+  const input=el.querySelector("input"),feedback=el.querySelector(".feedback");
+  const user=normalize(input.value),ans=normalize(t.answer);
+  let ok=user===ans;
+  if(!ok && !/[a-z]/i.test(ans) && /^-?\d+(\.\d+)?$/.test(user))ok=Number(user)===Number(ans);
+  t.done=true;totalChecked++;
+  if(ok){totalRight++;points++;feedback.textContent="Richtig! Sehr gut!";feedback.className="feedback correct";}
+  else{feedback.textContent=`Noch nicht ganz. Richtige Lösung: ${t.answer}${t.unit ? " "+t.unit : ""}${t.explain ? " – "+t.explain : ""}`;feedback.className="feedback wrong";}
+  input.disabled=true;el.querySelector(".check").disabled=true;stats();
+}
+function stats(){$("right").textContent=totalRight;$("checked").textContent=totalChecked;$("points").textContent=points;}
+$("newRound").addEventListener("click",generate);
+$("checkAll").addEventListener("click",()=>[...$("tasks").children].forEach((el,i)=>checkOne(i,el)));
+generate();
+</script>
+</body>
+</html>
