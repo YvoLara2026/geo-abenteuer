@@ -55,7 +55,7 @@ footer{text-align:center;padding:12px;color:#536a7b;font-size:.85rem}
  <button class="secondary" id="resetBtn" title="Alle gespeicherten Ergebnisse löschen">Fortschritt löschen</button>
 </section>
 <section class="panel">
- <div class="toprow"><div><h2 style="margin:0">Deine Lernreise</h2><div class="smallnote">Ein Thema hat jeweils 10 Aufgaben. Schließe ein Thema ab, um das nächste freizuschalten.</div></div><span class="tag" id="overallTag">0 von 80 Aufgaben</span></div>
+ <div class="toprow"><div><h2 style="margin:0">Deine Lernreise</h2><div class="smallnote">Ein Thema hat jeweils 10 Aufgaben. Wähle frei aus, womit du üben möchtest – jedes Thema funktioniert eigenständig.</div></div><span class="tag" id="overallTag">0 von 80 Aufgaben</span></div>
  <div class="progressbar"><span id="overallBar"></span></div>
  <div class="topics" id="topics"></div>
 </section>
@@ -249,10 +249,10 @@ let state={round:1,active:0,progress:topics.map(()=>({done:0,score:0,answers:[]}
 const $=id=>document.getElementById(id);
 function save(){try{localStorage.setItem("geoAbenteuerV2",JSON.stringify(state))}catch(e){}}
 function load(){try{const s=JSON.parse(localStorage.getItem("geoAbenteuerV2"));if(s&&s.progress&&s.progress.length===topics.length)state=s}catch(e){}}
-function unlocked(i){return i===0||state.progress[i-1].done>=topics[i-1].items.length}
+function unlocked(i){return true} // Alle Themen sind jederzeit frei wählbar.
 function renderTopics(){
  const el=$("topics");el.innerHTML="";
- topics.forEach((t,i)=>{let p=state.progress[i],b=document.createElement("button");b.className="topic"+(i===state.active?" active":"")+(p.done>=t.items.length?" done":"");b.disabled=!unlocked(i);b.innerHTML=`<strong>${t.icon} ${i+1}. ${t.title} ${p.done>=t.items.length?"✅":""}</strong><small>${t.desc}</small><small>${p.done}/${t.items.length} Aufgaben · ${p.score} Punkte ${!unlocked(i)?"· noch gesperrt":""}</small>`;b.onclick=()=>{state.active=i;state.current=Math.min(state.progress[i].done,t.items.length-1);state.selected=null;state.checked=false;render()};el.appendChild(b)});
+ topics.forEach((t,i)=>{let p=state.progress[i],b=document.createElement("button");b.className="topic"+(i===state.active?" active":"")+(p.done>=t.items.length?" done":"");b.disabled=false;b.innerHTML=`<strong>${t.icon} ${i+1}. ${t.title} ${p.done>=t.items.length?"✅":""}</strong><small>${t.desc}</small><small>${p.done}/${t.items.length} Aufgaben · ${p.score} Punkte · frei wählbar</small>`;b.onclick=()=>{state.active=i;state.current=Math.min(state.progress[i].done,t.items.length-1);state.selected=null;state.checked=false;render()};el.appendChild(b)});
 }
 function currentQ(){let t=topics[state.active],idx=state.questionOrder[state.active][state.current];return t.items[idx]}
 function visualFor(i){
@@ -277,7 +277,7 @@ function renderSummary(){
  let done=state.progress.reduce((a,p)=>a+p.done,0),score=state.progress.reduce((a,p)=>a+p.score,0);$("overallTag").textContent=`${done} von ${topics.reduce((sum,topic)=>sum+topic.items.length,0)} Aufgaben`; $("overallBar").style.width=(done/(topics.reduce((sum,topic)=>sum+topic.items.length,0))*100)+"%";
  $("stats").innerHTML=`<div class="stat"><b>${score}</b>Punkte insgesamt</div><div class="stat"><b>${done}/${topics.reduce((sum,topic)=>sum+topic.items.length,0)}</b>Aufgaben geschafft</div><div class="stat"><b>${Math.round(done/(topics.reduce((sum,topic)=>sum+topic.items.length,0))*100)}%</b>Gesamtfortschritt</div><div class="stat"><b>${state.round}</b>Aufgabenrunde</div>`;
  $("summaryDetails").innerHTML=topics.map((t,i)=>`<div style="margin:8px 0;padding:10px;border-radius:12px;background:#f5faff"><strong>${t.icon} ${t.title}</strong> — ${state.progress[i].done}/${t.items.length} abgeschlossen · ${state.progress[i].score} Punkte<div class="progressbar"><span style="width:${state.progress[i].done/t.items.length*100}%"></span></div></div>`).join("");
- const all=state.progress.every((p,i)=>p.done>=topics[i].items.length);$("newRoundBtn").style.display=all?"inline-block":"none";$("roundMessage").textContent=all?"Fantastisch! Du hast alle Themen abgeschlossen. Jetzt kannst du eine neue Runde starten.":"Schließe alle Themen ab, damit die nächste Aufgabenrunde freigeschaltet wird.";
+ const all=state.progress.every((p,i)=>p.done>=topics[i].items.length);$("newRoundBtn").style.display=all?"inline-block":"none";$("roundMessage").textContent=all?"Fantastisch! Du hast alle Themen abgeschlossen. Jetzt kannst du eine neue Runde starten.":"Du kannst jederzeit ein anderes Thema auswählen. Dein Fortschritt wird für jedes Thema separat gespeichert.";
 }
 function render(){renderTopics();renderQuestion();renderSummary();save()}
 $("hintBtn").onclick=()=>{$("hint").textContent=currentQ()[6]};
@@ -296,9 +296,21 @@ $("nextBtn").onclick=()=>{
    if(!state.checked){return}
    if(state.selected!==currentQ()[4]){state.checked=false;renderQuestion();return}
  }
- if(state.current<topics[state.active].items.length-1)state.current++;
- else if(p.done>=topics[state.active].items.length&&state.active<topics.length-1&&unlocked(state.active+1)){state.active++;state.current=0}
- else if(p.done<topics[state.active].items.length){$("feedback").className="feedback show bad";$("feedback").textContent="Beantworte diese Aufgabe richtig, bevor du weitergehst.";return}
+ if(state.current<topics[state.active].items.length-1){
+   state.current++;
+ } else {
+   if(p.done>=topics[state.active].items.length){
+     $("feedback").className="feedback show good";
+     $("feedback").textContent="🎉 Thema abgeschlossen! Wähle oben ein anderes Thema oder wiederhole dieses Thema.";
+     $("nextBtn").disabled=true;
+     $("checkBtn").disabled=true;
+     save();
+     return;
+   }
+   $("feedback").className="feedback show bad";
+   $("feedback").textContent="Beantworte diese Aufgabe richtig, bevor du weitergehst.";
+   return;
+ }
  state.selected=null;state.checked=false;render();
 };
 $("newRoundBtn").onclick=()=>{if(!state.progress.every((p,i)=>p.done>=topics[i].items.length))return;state.round++;state.progress=topics.map(()=>({done:0,score:0,answers:[]}));state.questionOrder=topics.map(t=>t.items.map((_,i)=>i).sort(()=>Math.random()-.5));state.active=0;state.current=0;state.selected=null;state.checked=false;render()};
