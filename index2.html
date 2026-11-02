@@ -32,7 +32,7 @@ button.secondary{background:#6c7a89;box-shadow:0 3px 0 #46525e}button.green{back
 .feedback.show{display:block}.correct{color:#176b43;background:#e6fff0}.wrong{color:#a52d35;background:#fff0eb}
 .hint{font-size:.93rem;color:#526779}.work{width:100%;min-height:115px;resize:vertical;margin-top:10px;border:2px solid #d9e5ef;border-radius:13px;padding:12px;font:inherit;color:var(--ink);background:#f8fbff}
 .solution{margin-top:10px;padding:12px;background:#fff3bf;border-radius:13px;border:1px solid #f4d98b}.taskbuttons{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-.footer{font-size:.9rem;color:#526779;text-align:center;margin-top:20px}
+.music-staff{display:block;width:100%;max-width:650px;height:auto;margin:12px 0;touch-action:manipulation;cursor:crosshair}.music-staff line{stroke:#24364b;stroke-width:1.5}.music-staff .note{fill:#172a46;stroke:#172a46;stroke-width:1.5}.music-staff .ledger{stroke:#24364b;stroke-width:1.5}.music-controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}.music-controls select{flex:0 1 230px}.music-symbol{font-size:2rem;display:inline-block;min-width:90px}.footer{font-size:.9rem;color:#526779;text-align:center;margin-top:20px}
 @media(max-width:600px){main{padding:14px 10px 28px}.panel,.task{padding:14px}.taskrow{align-items:stretch}.equation{min-width:100%}.answer{flex:1;width:100%}button{flex:1}}
 </style>
 </head>
@@ -57,6 +57,7 @@ button.secondary{background:#6c7a89;box-shadow:0 3px 0 #46525e}button.green{back
         <option value="mal">Multiplikation</option>
         <option value="potenzen">Potenzen – Einstieg</option>
         <option value="rechner">Potenzen mit dem Taschenrechner</option>
+        <option value="musik">🎵 Musik: Noten erkennen, einzeichnen und Notenwerte</option>
       </select>
       <button id="newRound">Neue Aufgaben</button>
       <button class="secondary" id="checkAll">Alle prüfen</button>
@@ -141,6 +142,31 @@ function make(type){
   return make(types[rnd(0,types.length-1)]);
 }
 function normalize(s){return String(s).toLowerCase().trim().replace(/,/g,".").replace(/\s+/g," ").replace(/kilometer/g,"km").replace(/meter/g,"m").replace(/gramm/g,"g").replace(/kilogramm/g,"kg").replace(/liter/g,"l").replace(/milliliter/g,"ml");}
+
+const noteNames=["g","a","h","c1","d1","e1","f1","g1","a1","h1","c2","d2","e2","f2","g2","a2","h2","c3"];
+function musicTask(){
+ const k=Math.floor(Math.random()*3);
+ if(k===0){const n=Math.floor(Math.random()*noteNames.length);return {kind:"identify",question:"Wie heißt diese Note im Violinschlüssel?",note:n,answer:noteNames[n],explain:"Lies die Note von unten nach oben. Die tiefste Note in diesem Übungsbereich ist g."};}
+ if(k===1){const n=Math.floor(Math.random()*noteNames.length);return {kind:"draw",question:`Zeichne die Note ${noteNames[n]} in die Notenlinien. Klicke an die passende Höhe.`,note:n,answer:noteNames[n],explain:"Die Note muss auf der richtigen Linie oder im richtigen Zwischenraum liegen."};}
+ const vals=[["Ganze Note","𝅝","4 Schläge"],["Halbe Note","𝅗𝅥","2 Schläge"],["Viertelnote","♩","1 Schlag"],["Achtelnote","♪","½ Schlag"]];
+ const v=vals[Math.floor(Math.random()*vals.length)];
+ return {kind:"value",question:`Wie heißt dieser Notenwert und wie viele Schläge zählt er?`,symbol:v[1],answer:`${v[0]} ${v[2]}`,explain:"Merke: Ganze = 4, Halbe = 2, Viertel = 1, Achtel = ein halber Schlag."};
+}
+function staffSvg(noteIndex=null, clickable=false, selected=null){
+ let lines=[48,68,88,108,128];
+ let svg=`<svg class="music-staff" viewBox="0 0 650 200" role="${clickable?'button':'img'}" aria-label="Notenlinien im Violinschlüssel">`;
+ lines.forEach(y=>svg+=`<line x1="35" y1="${y}" x2="615" y2="${y}"/>`);
+ svg+=`<text x="38" y="112" font-size="72" fill="#172a46">𝄞</text>`;
+ // position mapping: e1 is bottom line; g is three diatonic steps below it
+ function yy(i){return 128-(i-5)*10;}
+ function nshape(i,x=330,color="#172a46"){const y=yy(i);let out="";if(i<=5&&i%2===1)out+=`<line class="ledger" x1="${x-17}" y1="${y}" x2="${x+17}" y2="${y}"/>`;if(i>=9&&i%2===1)out+=`<line class="ledger" x1="${x-17}" y1="${y}" x2="${x+17}" y2="${y}"/>`;out+=`<ellipse class="note" cx="${x}" cy="${y}" rx="10" ry="6.5" transform="rotate(-20 ${x} ${y})" ${color!=="#172a46"?`style="fill:${color};stroke:${color}"`:""}/>`;return out;}
+ if(noteIndex!==null)svg+=nshape(noteIndex,350);
+ if(selected!==null)svg+=nshape(selected,500,"#e63946");
+ if(clickable){svg+=`<rect x="35" y="10" width="580" height="150" fill="transparent" data-staff-click="yes"/>`;svg+=`<text x="350" y="158" font-size="12" text-anchor="middle" fill="#526779">Hier klicken, um die Note einzuzeichnen</text>`;}
+ svg+="</svg>";return svg;
+}
+function musicValueMarkup(){return `<div class="music-symbol" aria-hidden="true">𝅝　𝅗𝅥　♩　♪</div><p class="hint">Ganze Note = 4 Schläge · Halbe Note = 2 · Viertelnote = 1 · Achtelnote = ½</p>`;}
+
 function generate(){
   current=[];totalRight=0;totalChecked=0;points=0;
   const type=$("topic").value;
@@ -148,7 +174,7 @@ function generate(){
   let attempts=0;
   while(current.length<target && attempts<100){
     attempts++;
-    const t=make(type);
+    const t=type==="musik"?[musicTask()]:make(type);
     t.forEach(x=>{if(current.length<target)current.push({...x,id:current.length,done:false});});
   }
   $("totalTasks").textContent=current.length;
@@ -158,6 +184,22 @@ function render(){
   $("tasks").innerHTML="";
   current.forEach((t,i)=>{
     const el=document.createElement("article");el.className="task";
+    if(t.kind){
+      let body=`<h3>Aufgabe ${i+1}</h3><div class="equation">${t.question}</div>`;
+      if(t.kind==="identify") body+=staffSvg(t.note)+`<div class="taskrow"><input class="answer" type="text" placeholder="Notenname, z. B. c1" aria-label="Notenname"><button class="check">Prüfen</button></div>`;
+      else if(t.kind==="draw") body+=staffSvg(null,true)+`<p class="hint">Klicke in die Notenlinien auf die Höhe, an der die Note ${noteNames[t.note]} liegen muss.</p><button class="check">Note prüfen</button>`;
+      else body+=musicValueMarkup()+`<div class="taskrow"><input class="answer" type="text" placeholder="z. B. Viertelnote 1 Schlag" aria-label="Notenwert und Schläge"><button class="check">Prüfen</button></div>`;
+      body+=`<label style="display:block;margin-top:12px;font-weight:650" for="work-${i}">Notizen (optional)</label><textarea class="work" id="work-${i}" placeholder="Schreibe hier deine Gedanken auf …"></textarea><div class="taskbuttons"><button class="secondary solutionBtn" type="button">Musterlösung anzeigen</button></div><div class="solution" hidden></div><div class="feedback" aria-live="polite"></div>`;
+      el.innerHTML=body;
+      if(t.kind==="draw"){
+        const svg=el.querySelector("svg");
+        svg.addEventListener("click",ev=>{const rect=svg.getBoundingClientRect();const y=(ev.clientY-rect.top)/rect.height*200;let idx=Math.round(5+(128-y)/10);idx=Math.max(0,Math.min(noteNames.length-1,idx));el.dataset.clickednote=noteNames[idx];svg.outerHTML=staffSvg(null,false,idx);});
+      }
+      el.querySelector(".check").addEventListener("click",()=>checkOne(i,el));
+      const inp=el.querySelector("input");if(inp)inp.addEventListener("keydown",e=>{if(e.key==="Enter")checkOne(i,el);});
+      el.querySelector(".solutionBtn").addEventListener("click",()=>{const box=el.querySelector(".solution");box.hidden=!box.hidden;box.textContent=box.hidden?"":`Lösung: ${t.answer} — ${t.explain}`;el.querySelector(".solutionBtn").textContent=box.hidden?"Musterlösung anzeigen":"Musterlösung ausblenden";});
+      $("tasks").appendChild(el);return;
+    }
     el.innerHTML=`<h3>Aufgabe ${i+1}</h3><div class="taskrow"><div class="equation"></div><input class="answer" type="text" autocomplete="off" aria-label="Antwort zu Aufgabe ${i+1}" placeholder="Deine Antwort"><button class="check">Prüfen</button></div><label style="display:block;margin-top:12px;font-weight:650" for="work-${i}">Mein Rechenweg (optional)</label><textarea class="work" id="work-${i}" placeholder="Schreibe deine Zwischenschritte auf … (z. B. 3 × 3 × 3 = 27)"></textarea><div class="taskbuttons"><button class="secondary solutionBtn" type="button">Musterlösung anzeigen</button></div><div class="solution" hidden></div><div class="feedback" aria-live="polite"></div>`;
     el.querySelector(".equation").innerHTML=powerHTML(t.question);
     el.querySelector("input").value="";
@@ -175,9 +217,13 @@ function render(){
 function checkOne(i,el){
   const t=current[i];if(t.done)return;
   const input=el.querySelector("input"),feedback=el.querySelector(".feedback");
-  const user=normalize(input.value),ans=normalize(t.answer);
+  let user=input?normalize(input.value):"",ans=normalize(t.answer);
+  if(t.kind==="draw"){user=normalize(el.dataset.clickednote||"");}
   let ok=user===ans;
+  if(t.kind==="value"){ok=user.replace(/schläge?/g,"schlag").replace(/viertelnote/g,"viertelnote")===ans.replace(/schläge?/g,"schlag");}
+  if(t.kind==="value" && user===normalize(t.answer.split(" ")[0]))ok=true;
   if(!ok && !/[a-z]/i.test(ans) && /^-?\d+(\.\d+)?$/.test(user))ok=Number(user)===Number(ans);
+  if(t.kind==="value"){const aliases={"ganze note 4 schläge":"ganze note 4 schläge","halbe note 2 schläge":"halbe note 2 schläge","viertelnote 1 schlag":"viertelnote 1 schlag","achtelnote ½ schlag":"achtelnote ½ schlag"};ok=Object.values(aliases).includes(user);}
   t.done=true;totalChecked++;
   if(ok){totalRight++;points++;feedback.textContent="Richtig! Sehr gut! Dein Rechenweg bleibt zum Nachvollziehen stehen.";feedback.className="feedback correct";}
   else{feedback.innerHTML=powerHTML(`Noch nicht ganz. Richtige Lösung: ${t.answer}${t.unit ? " "+t.unit : ""}${t.explain ? " – "+t.explain : ""}. Du kannst die Musterlösung zusätzlich öffnen.`);feedback.className="feedback wrong";}
