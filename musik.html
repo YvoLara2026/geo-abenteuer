@@ -137,7 +137,7 @@ function musicTask(){
  if(k===1){const n=Math.floor(Math.random()*noteNames.length);return {kind:"draw",question:`Zeichne die Note ${noteNames[n]} in die Notenlinien. Klicke an die passende Höhe.`,note:n,answer:noteNames[n],explain:"Die Note muss auf der richtigen Linie oder im richtigen Zwischenraum liegen."};}
  const vals=[["Ganze Note","𝅝","4 Schläge"],["Halbe Note","𝅗𝅥","2 Schläge"],["Viertelnote","♩","1 Schlag"],["Achtelnote","♪","½ Schlag"]];
  const v=vals[Math.floor(Math.random()*vals.length)];
- return {kind:"value",question:"Welche Bezeichnung und Schlagzahl passen zu dieser Note?",symbol:v[1],answer:`${v[0]} ${v[2]}`,explain:`${v[0]} zählt ${v[2]}.`};
+ return {kind:"value",question:`Schau dir die Note an: ${v[1]} — wie heißt sie und wie viele Schläge zählt sie?`,symbol:v[1],answer:`${v[0]} ${v[2]}`,explain:"Ganze Note = 4 Schläge, halbe Note = 2, Viertelnote = 1, Achtelnote = ½ Schlag."};
 }
 function staffSvg(noteIndex=null, clickable=false, selected=null){
  let lines=[48,68,88,108,128];
@@ -152,7 +152,7 @@ function staffSvg(noteIndex=null, clickable=false, selected=null){
  if(clickable){svg+=`<rect x="35" y="10" width="580" height="150" fill="transparent" data-staff-click="yes"/>`;svg+=`<text x="350" y="158" font-size="12" text-anchor="middle" fill="#526779">Hier klicken, um die Note einzuzeichnen</text>`;}
  svg+="</svg>";return svg;
 }
-function musicValueMarkup(t){return `<div class="music-symbol" aria-label="Zu bestimmende Note" style="font-size:3.2rem;min-width:0;margin:8px 0 14px">${t.symbol}</div><p><strong>Wähle genau eine Antwort für das oben gezeigte Notensymbol:</strong></p><select class="answer" aria-label="Bezeichnung und Schlagzahl für das gezeigte Notensymbol auswählen"><option value="">Bitte eine Antwort auswählen …</option><option value="Ganze Note 4 Schläge">Ganze Note – 4 Schläge</option><option value="Halbe Note 2 Schläge">Halbe Note – 2 Schläge</option><option value="Viertelnote 1 Schlag">Viertelnote – 1 Schlag</option><option value="Achtelnote ½ Schlag">Achtelnote – ½ Schlag</option></select>`;}
+function musicValueMarkup(t){return `<div class="music-symbol" aria-label="Notensymbol">${t.symbol}</div><p>Wähle die passende Antwort aus:</p><select class="answer" aria-label="Name und Schlagzahl auswählen"><option value="">Bitte auswählen …</option><option>Ganze Note 4 Schläge</option><option>Halbe Note 2 Schläge</option><option>Viertelnote 1 Schlag</option><option>Achtelnote ½ Schlag</option></select><p class="hint">Tipp: Eine ganze Note zählt 4, eine halbe 2, eine Viertel 1 und eine Achtel ½ Schlag.</p>`;}
 
 function generate(){
   current=[];totalRight=0;totalChecked=0;points=0;
@@ -179,17 +179,8 @@ function render(){
       body+=`<label style="display:block;margin-top:12px;font-weight:650" for="work-${i}">Notizen (optional)</label><textarea class="work" id="work-${i}" placeholder="Schreibe hier deine Gedanken auf …"></textarea><div class="taskbuttons"><button class="secondary solutionBtn" type="button">Musterlösung anzeigen</button></div><div class="solution" hidden></div><div class="feedback" aria-live="polite"></div>`;
       el.innerHTML=body;
       if(t.kind==="draw"){
-        const handleStaffClick=ev=>{
-          const svg=ev.currentTarget;
-          const rect=svg.getBoundingClientRect();
-          const y=(ev.clientY-rect.top)/rect.height*200;
-          let idx=Math.round(5+(128-y)/10);
-          idx=Math.max(0,Math.min(noteNames.length-1,idx));
-          el.dataset.clickednote=noteNames[idx];
-          svg.outerHTML=staffSvg(null,true,idx);
-          el.querySelector("svg").addEventListener("click",handleStaffClick);
-        };
-        el.querySelector("svg").addEventListener("click",handleStaffClick);
+        const svg=el.querySelector("svg");
+        svg.addEventListener("click",ev=>{const rect=svg.getBoundingClientRect();const y=(ev.clientY-rect.top)/rect.height*200;let idx=Math.round(5+(128-y)/10);idx=Math.max(0,Math.min(noteNames.length-1,idx));el.dataset.clickednote=noteNames[idx];svg.outerHTML=staffSvg(null,false,idx);});
       }
       el.querySelector(".check").addEventListener("click",()=>checkOne(i,el));
       const inp=el.querySelector("input");if(inp)inp.addEventListener("keydown",e=>{if(e.key==="Enter")checkOne(i,el);});
@@ -215,31 +206,13 @@ function checkOne(i,el){
   const input=el.querySelector("input, select.answer"),feedback=el.querySelector(".feedback");
   let user=input?normalize(input.value):"",ans=normalize(t.answer);
   if(t.kind==="draw"){user=normalize(el.dataset.clickednote||"");}
-  if(!user){
-    feedback.textContent=t.kind==="draw"?"Bitte klicke zuerst auf die passende Höhe in den Notenlinien.":"Bitte wähle zuerst eine Antwort aus oder gib eine Antwort ein.";
-    feedback.className="feedback show wrong";
-    return;
-  }
   let ok=user===ans;
   if(!ok && !/[a-z]/i.test(ans) && /^-?\d+(\.\d+)?$/.test(user))ok=Number(user)===Number(ans);
   if(t.kind==="value"){ok=user===normalize(t.answer);}
-  if(ok){
-    t.done=true;totalChecked++;totalRight++;points++;
-    feedback.textContent="Richtig! Sehr gut!";
-    feedback.className="feedback show correct";
-    if(input)input.disabled=true;
-    const checkButton=el.querySelector(".check");if(checkButton)checkButton.disabled=true;
-    const choice=el.querySelector("select.answer");if(choice)choice.disabled=true;
-    if(t.kind==="draw"){
-      const svg=el.querySelector("svg");
-      if(svg)svg.outerHTML=staffSvg(null,false,Array.from(noteNames).indexOf(el.dataset.clickednote));
-    }
-  }else{
-    feedback.textContent="Das ist leider noch nicht richtig. Versuche es noch einmal!";
-    feedback.className="feedback show wrong";
-    // Keep the task and answer controls active so the learner can try again.
-  }
-  stats();
+  t.done=true;totalChecked++;
+  if(ok){totalRight++;points++;feedback.textContent="Richtig! Sehr gut! Dein Rechenweg bleibt zum Nachvollziehen stehen.";feedback.className="feedback correct";}
+  else{feedback.innerHTML=powerHTML(`Noch nicht ganz. Richtige Lösung: ${t.answer}${t.unit ? " "+t.unit : ""}${t.explain ? " – "+t.explain : ""}. Du kannst die Musterlösung zusätzlich öffnen.`);feedback.className="feedback wrong";}
+  if(input)input.disabled=true;const checkButton=el.querySelector(".check");if(checkButton)checkButton.disabled=true;const choice=el.querySelector("select.answer");if(choice)choice.disabled=true;stats();
 }
 function stats(){$("right").textContent=totalRight;$("checked").textContent=totalChecked;$("points").textContent=points;}
 $("newRound").addEventListener("click",generate);
