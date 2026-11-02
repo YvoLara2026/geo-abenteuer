@@ -219,8 +219,8 @@ function checkOne(i,el){
   if(!ok && !/[a-z]/i.test(ans) && /^-?\d+(\.\d+)?$/.test(user))ok=Number(user)===Number(ans);
   if(t.kind==="value"){const aliases={"ganze note 4 schläge":"ganze note 4 schläge","halbe note 2 schläge":"halbe note 2 schläge","viertelnote 1 schlag":"viertelnote 1 schlag","achtelnote ½ schlag":"achtelnote ½ schlag"};ok=Object.values(aliases).includes(user);}
   t.done=true;totalChecked++;
-  if(ok){totalRight++;points++;feedback.textContent="Richtig! Sehr gut! Dein Rechenweg bleibt zum Nachvollziehen stehen.";feedback.className="feedback correct";}
-  else{feedback.innerHTML=powerHTML(`Noch nicht ganz. Richtige Lösung: ${t.answer}${t.unit ? " "+t.unit : ""}${t.explain ? " – "+t.explain : ""}. Du kannst die Musterlösung zusätzlich öffnen.`);feedback.className="feedback wrong";}
+  if(ok){totalRight++;points++;feedback.textContent="Richtig! Sehr gut! Dein Rechenweg bleibt zum Nachvollziehen stehen.";feedback.className="feedback show correct";}
+  else{feedback.innerHTML=powerHTML(`Noch nicht ganz. Richtige Lösung: ${t.answer}${t.unit ? " "+t.unit : ""}${t.explain ? " – "+t.explain : ""}. Du kannst die Musterlösung zusätzlich öffnen.`);feedback.className="feedback show wrong";}
   input.disabled=true;el.querySelector(".check").disabled=true;stats();
 }
 function stats(){$("right").textContent=totalRight;$("checked").textContent=totalChecked;$("points").textContent=points;}
