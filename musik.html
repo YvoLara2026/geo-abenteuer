@@ -1,65 +1,225 @@
-<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Musik-Abenteuer · Klasse 5</title>
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Musik-Training Klasse 5</title>
 <style>
-:root{--ink:#28334a;--muted:#637087;--line:#f2d8a6;--purple:#7857b8;--green:#25885b}
-*{box-sizing:border-box}body{margin:0;background:linear-gradient(160deg,#fff7e5,#f5f0ff 55%,#eaf8ff);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
-header{text-align:center;padding:24px 14px 20px;background:linear-gradient(120deg,#7352b2,#a66bd3);color:white}header h1{font-size:clamp(1.8rem,5vw,2.8rem);margin:0}header p{margin:8px 0 0}
-main{max-width:1000px;margin:auto;padding:18px 14px 35px}.home{text-align:center;margin-bottom:14px}.home a{display:inline-block;background:white;color:#67439c;padding:10px 16px;border-radius:14px;text-decoration:none;font-weight:800;box-shadow:0 3px 0 #d7c6ed}
-.panel{background:#fff;border:2px solid var(--line);border-radius:22px;padding:18px;margin:14px 0;box-shadow:0 5px 0 #f0e4cb}.hero{display:flex;gap:14px;align-items:center;background:#fff7d9}.mascot{font-size:3.5rem;flex-shrink:0}.bubble{background:white;border:2px dashed #efc45e;border-radius:18px;padding:13px;line-height:1.5}
-h2{margin:0 0 8px}h3{margin:0 0 8px}.muted,.small{color:var(--muted);font-size:.94rem}.topicgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
-.topic{border:2px solid #ded3f5;background:#fbf8ff;border-radius:18px;padding:15px;text-align:left;cursor:pointer;color:var(--ink);font:inherit}.topic:hover,.topic:focus{outline:3px solid #f8cf66}.topic .emoji{font-size:2rem}.topic strong{display:block;font-size:1.05rem;margin:4px 0}
-button{font:inherit;border:0;border-radius:12px;padding:11px 15px;background:var(--purple);color:white;font-weight:800;cursor:pointer}button.secondary{background:#e9e3f6;color:#4b3776}button.goodbtn{background:var(--green)}button:disabled{opacity:.45;cursor:not-allowed}
-.controls{display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin:10px 0}.tag{display:inline-block;border-radius:999px;background:#fff0c4;padding:6px 10px;font-size:.9rem;font-weight:800}.progress{height:12px;background:#f0e9fb;border-radius:99px;overflow:hidden;margin:10px 0}.progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,#f5c84e,#e68c32);transition:width .2s}
-.question{font-size:1.2rem;font-weight:800;margin:12px 0}.answers{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:9px}.answer{background:#f5f0ff;color:#302747;border:2px solid #ded3f5;text-align:left}.answer.selected{border-color:#7857b8;background:#e7dcff}.answer.correct{border-color:#25885b;background:#e0f7e9}.answer.wrong{border-color:#d45555;background:#ffeded}.feedback{min-height:26px;font-weight:750;margin-top:12px}.feedback.good{color:#187446}.feedback.bad{color:#b33232}
-.visual{background:#fff9e9;border-radius:18px;padding:15px;margin:12px 0;text-align:center;border:1px dashed #edc85e}.music-symbol{font-size:2.6rem}.beatrow{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}.beat{padding:12px 14px;border-radius:12px;background:#f2eaff;font-size:1.35rem;font-weight:800;min-width:50px}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}.learn{background:#f9f5ff;border-radius:15px;padding:13px;border:1px solid #e6dbf8}.learn b{display:block;margin-bottom:5px}
-footer{text-align:center;color:var(--muted);padding:14px;font-size:.85rem}@media(max-width:600px){main{padding:12px}.panel{padding:14px}.hero{align-items:flex-start}.mascot{font-size:2.5rem}.question{font-size:1.08rem}}
-</style></head><body>
-<header><h1>🎵 Musik-Abenteuer</h1><p>Noten, Pausen und Rhythmus · Klasse 5</p></header><main>
-<div class="home"><a href="index.html">🏠 Zurück zu den Lernabenteuern</a></div>
-<section class="panel hero"><div class="mascot" aria-hidden="true">🎸</div><div class="bubble"><b>Hallo, Rhythmus-Star!</b><br>Ich bin Mimi Musikmaus. Entdecke Noten und Pausen, knacke Rhythmus-Rätsel und sammle Sternchen. Du darfst Fehler machen – so lernst du dazu! 🎶</div></section>
-<section class="panel"><h2>🎨 Wähle dein Musik-Abenteuer</h2><p class="muted">Jedes Thema hat eigene Fragen. Du kannst jederzeit frei wählen.</p><div class="topicgrid" id="topics">
-<button class="topic" onclick="chooseTopic('werte')"><span class="emoji">🎼</span><strong>Notenwerte</strong><span class="small">Ganze, halbe, Viertel, Achtel und Sechzehntel</span></button>
-<button class="topic" onclick="chooseTopic('pausen')"><span class="emoji">🤫</span><strong>Notenpausen</strong><span class="small">Wie lange ist es still?</span></button>
-<button class="topic" onclick="chooseTopic('rechnen')"><span class="emoji">🧩</span><strong>Notenwerte rechnen</strong><span class="small">Was passt in einen Takt?</span></button>
-<button class="topic" onclick="chooseTopic('takt')"><span class="emoji">🥁</span><strong>Takt und Rhythmus</strong><span class="small">Zählen, klatschen und Muster erkennen</span></button>
-<button class="topic" onclick="chooseTopic('schrift')"><span class="emoji">🎹</span><strong>Notenschrift</strong><span class="small">Notenkopf, Hals, Fähnchen und Balken</span></button>
-<button class="topic" onclick="chooseTopic('mix')"><span class="emoji">🌟</span><strong>Gemischte Runde</strong><span class="small">Ein bisschen von allem</span></button></div></section>
-<section class="panel" id="quiz" hidden><div class="controls"><span class="tag" id="topicTag">Thema</span><span class="tag" id="countTag">Frage 1</span><span class="tag">⭐ Punkte: <span id="points">0</span></span></div><div class="progress"><span id="bar"></span></div><div class="visual" id="visual"></div><div class="question" id="question"></div><div class="answers" id="answers"></div><div class="feedback" id="feedback" aria-live="polite"></div><div class="controls"><button class="secondary" onclick="showHint()">💡 Tipp</button><span class="small" id="hint"></span><span style="flex:1"></span><button id="check" onclick="checkAnswer()">Antwort prüfen</button><button class="goodbtn" id="next" onclick="nextQuestion()" disabled>Weiter ➜</button></div></section>
-<section class="panel"><h2>📚 Mini-Merkblatt</h2><div class="cards">
-<div class="learn"><b>🎵 Ganze Note</b>4 Viertelschläge – so lang wie zwei halbe Noten.</div><div class="learn"><b>🎵 Halbe Note</b>2 Viertelschläge.</div><div class="learn"><b>🎵 Viertelnote</b>1 Viertelschlag.</div><div class="learn"><b>🎵 Achtelnote</b>½ Viertelschlag; zwei Achtel ergeben eine Viertel.</div><div class="learn"><b>🎵 Sechzehntelnote</b>¼ Viertelschlag; vier Sechzehntel ergeben eine Viertel.</div><div class="learn"><b>🤫 Pausen</b>Jeder Notenwert hat eine Pause mit derselben Dauer.</div></div><p class="small">Merke: Die Dauer hängt vom Tempo ab. Hier vergleichen wir die Notenwerte miteinander. In einem 4/4-Takt passen vier Viertelschläge.</p></section>
-<footer>Musik-Abenteuer · Klasse 5 · Läuft ohne externe Bilder oder Musikdateien direkt im Browser.</footer></main>
+:root{--ink:#183153;--blue:#3d8bfd;--sky:#eaf6ff;--green:#20a46b;--gold:#ffd166;--pink:#ff8fab;--paper:#fffdf6;--line:#d7e8f5;--muted:#526779}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Trebuchet MS",Arial,sans-serif;color:var(--ink);background:linear-gradient(135deg,#dff4ff,#fff4d9);min-height:100vh;font-size:16px;line-height:1.45}
+header{padding:22px 16px 18px;text-align:center;background:#fffdf2;border-bottom:4px solid #bde0fe}
+header h1{margin:0;font-size:clamp(1.8rem,4vw,3rem);font-weight:800}
+header p{margin:8px 0 0;font-size:1.05rem}
+main{max-width:1100px;margin:auto;padding:18px 18px 34px}
+.toplink{text-align:center;margin:0 0 18px}
+a.home-link{display:inline-block;background:#6c7a89;color:white;padding:10px 16px;border-radius:13px;text-decoration:none;font-weight:bold;box-shadow:0 3px 0 #46525e}
+.panel,.task{background:#fff;border:2px solid var(--line);border-radius:22px;padding:18px;margin-bottom:16px;box-shadow:0 5px 0 #c7ddeb}
+.panel strong{font-size:1.05rem}
+.controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+select,button,input{font:inherit;border-radius:13px;padding:11px 16px;border:0}
+select{background:#f4f8fc;border:2px solid #d9e5ef;color:var(--ink);flex:1;min-width:210px}
+button{cursor:pointer;background:var(--blue);color:white;font-weight:bold;box-shadow:0 3px 0 #2164bd;transition:transform .08s}
+button:hover{filter:brightness(1.05)}button:active{transform:translateY(2px);box-shadow:0 1px 0 #2164bd}button:disabled{opacity:.45;cursor:not-allowed}
+button.secondary{background:#6c7a89;box-shadow:0 3px 0 #46525e}button.green{background:var(--green);box-shadow:0 3px 0 #14764b}
+.stats{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px}
+.stat{background:#eef6ff;padding:8px 12px;border-radius:99px;font-size:.95rem;font-weight:bold}
+.task h3{margin:0 0 10px;font-size:1.1rem;color:var(--ink)}
+.taskrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.equation{font-size:1.25rem;font-weight:bold;flex:1;min-width:220px}.equation sup,.solution sup,.feedback sup{font-size:.68em;vertical-align:super;line-height:0}
+.answer{width:190px;max-width:100%;background:#f4f8fc;border:2px solid #d9e5ef;color:var(--ink)}
+.feedback{margin-top:10px;font-weight:650;padding:10px 12px;border-radius:12px;display:none}
+.feedback.show{display:block}.correct{color:#176b43;background:#e6fff0}.wrong{color:#a52d35;background:#fff0eb}
+.hint{font-size:.93rem;color:#526779}.work{width:100%;min-height:115px;resize:vertical;margin-top:10px;border:2px solid #d9e5ef;border-radius:13px;padding:12px;font:inherit;color:var(--ink);background:#f8fbff}
+.solution{margin-top:10px;padding:12px;background:#fff3bf;border-radius:13px;border:1px solid #f4d98b}.taskbuttons{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.music-staff{display:block;width:100%;max-width:650px;height:auto;margin:12px 0;touch-action:manipulation;cursor:crosshair}.music-staff line{stroke:#24364b;stroke-width:1.5}.music-staff .note{fill:#172a46;stroke:#172a46;stroke-width:1.5}.music-staff .ledger{stroke:#24364b;stroke-width:1.5}.music-controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}.music-controls select{flex:0 1 230px}.music-symbol{font-size:2rem;display:inline-block;min-width:90px}.footer{font-size:.9rem;color:#526779;text-align:center;margin-top:20px}
+@media(max-width:600px){main{padding:14px 10px 28px}.panel,.task{padding:14px}.taskrow{align-items:stretch}.equation{min-width:100%}.answer{flex:1;width:100%}button{flex:1}}
+</style>
+</head>
+<body>
+<header>
+  <h1>🎵 Musik-Training</h1>
+  <p>Noten erkennen, einzeichnen und Notenwerte üben · Klasse 5</p>
+</header>
+<main>
+  <div class="toplink"><a class="home-link" href="index.html">🏠 Zurück zur Startseite</a></div>
+  <section class="panel">
+    <strong>🎼 Übe die Noten im Violinschlüssel</strong>
+    <p class="hint">Du übst nur den Violinschlüssel – keinen Bassschlüssel. Die Noten reichen in diesem Übungsbereich von g bis c3. Bei jeder Runde gibt es zehn Aufgaben: Noten erkennen, Noten einzeichnen und Notenwerte bestimmen.</p>
+    <div class="controls" style="margin-top:10px">
+      <button id="newRound">Neue Aufgaben</button>
+      <button class="secondary" id="checkAll">Alle prüfen</button>
+    </div>
+    <div class="stats">
+      <div class="stat">Richtig: <span id="right">0</span></div>
+      <div class="stat">Geprüft: <span id="checked">0</span> / <span id="totalTasks">10</span></div>
+      <div class="stat">Punkte in dieser Runde: <span id="points">0</span></div>
+    </div>
+  </section>
+  <section id="tasks" aria-live="polite"></section>
+  <section class="panel">
+    <strong>🎶 So lernst du am besten:</strong>
+    <p style="margin-bottom:0">Lies die Note im Violinschlüssel von unten nach oben. Bei Einzeichnungsaufgaben klickst du auf die passende Höhe in den Notenlinien. Bei Notenwerten bestimmst du den Namen und die Anzahl der Schläge. Bei Fehlern kannst du dir die Musterlösung anzeigen lassen.</p>
+  </section>
+  <div class="footer">Musik-Training · Klasse 5 · Die Aufgaben werden bei jeder Runde neu erstellt.</div>
+</main>
 <script>
-const bank=[
-{topic:'werte',q:'Wie viele Viertelschläge dauert eine ganze Note?',a:['1','2','4','8'],c:2,h:'Eine ganze Note ist doppelt so lang wie eine halbe Note.',e:'Eine ganze Note entspricht vier Viertelschlägen.',v:'<div class="music-symbol">𝅝</div><div>Ganze Note</div>'},
-{topic:'werte',q:'Wie viele Viertelnoten entsprechen einer halben Note?',a:['1','2','3','4'],c:1,h:'Eine halbe Note ist halb so lang wie eine ganze Note.',e:'Eine halbe Note dauert zwei Viertelschläge.',v:'<div class="music-symbol">𝅗𝅥</div><div>Halbe Note</div>'},
-{topic:'werte',q:'Wie viele Achtelnoten haben zusammen die Dauer einer Viertelnote?',a:['1','2','4','8'],c:1,h:'Achtel sind halb so lang wie Viertel.',e:'Zwei Achtelnoten ergeben eine Viertelnote.',v:'<div class="beatrow"><span class="beat">♪</span><span class="beat">♪</span></div>'},
-{topic:'werte',q:'Wie viele Sechzehntelnoten entsprechen einer Viertelnote?',a:['2','3','4','6'],c:2,h:'Eine Sechzehntel ist halb so lang wie eine Achtelnote.',e:'Vier Sechzehntelnoten ergeben eine Viertelnote.',v:'<div class="beatrow"><span class="beat">♬</span><span class="beat">♬</span></div>'},
-{topic:'werte',q:'Welche Note dauert am längsten?',a:['Achtelnote','Viertelnote','Halbe Note','Ganze Note'],c:3,h:'Sie hat den längsten Wert in dieser Auswahl.',e:'Die ganze Note dauert länger als die halbe, Viertel- und Achtelnote.',v:'<div class="music-symbol">𝅝　𝅗𝅥　♩　♪</div>'},
-{topic:'werte',q:'Wie viele halbe Noten haben dieselbe Dauer wie eine ganze Note?',a:['1','2','3','4'],c:1,h:'Zwei Hälften ergeben ein Ganzes.',e:'Zwei halbe Noten dauern zusammen so lange wie eine ganze Note.',v:'<div class="beatrow"><span class="beat">𝅗𝅥</span><span class="beat">𝅗𝅥</span></div>'},
-{topic:'pausen',q:'Wie lange dauert eine Viertelpause im Vergleich zu einer Viertelnote?',a:['Gleich lang','Doppelt so lang','Halb so lang','Gar nicht'],c:0,h:'Eine Pause ersetzt einen Ton für eine bestimmte Zeit.',e:'Viertelnote und Viertelpause dauern gleich lang.',v:'<div class="music-symbol">♩　𝄽</div><div>Viertelnote und Viertelpause</div>'},
-{topic:'pausen',q:'Was bedeutet eine Pause in der Musik?',a:['Alle müssen das Lied beenden','Für eine bestimmte Zeit wird nicht gespielt oder gesungen','Das Tempo verdoppelt sich','Der Ton wird immer höher'],c:1,h:'Eine Pause ist auch Teil des Rhythmus.',e:'Während der Pause erklingt für die festgelegte Dauer kein Ton.',v:'<div class="music-symbol">🤫 🎶</div>'},
-{topic:'pausen',q:'Welche Pause passt in der Dauer zu einer halben Note?',a:['Achtelpause','Viertelpause','Halbe Pause','Sechzehntelpause'],c:2,h:'Notenwert und Pause haben denselben Namen und dieselbe Dauer.',e:'Die halbe Pause dauert genauso lang wie eine halbe Note.',v:'<div class="music-symbol">𝄼</div><div>Halbe Pause</div>'},
-{topic:'pausen',q:'Zwei Viertelpausen dauern zusammen so lange wie …',a:['eine Achtelpause','eine Viertelpause','eine halbe Pause','eine ganze Pause'],c:2,h:'Zwei Viertel ergeben eine Hälfte.',e:'Zwei Viertelpausen entsprechen der Dauer einer halben Pause.',v:'<div class="beatrow"><span class="beat">𝄽</span><span class="beat">𝄽</span></div>'},
-{topic:'rechnen',q:'Wie viele Viertelnoten passen in einen 4/4-Takt?',a:['2','3','4','8'],c:2,h:'Die obere 4 zeigt: vier Viertelschläge pro Takt.',e:'Im 4/4-Takt sind vier Viertelschläge enthalten.',v:'<div class="beatrow"><span class="beat">1</span><span class="beat">2</span><span class="beat">3</span><span class="beat">4</span></div>'},
-{topic:'rechnen',q:'Welche Kombination ergibt genau vier Viertelschläge?',a:['Eine halbe + zwei Viertel','Eine halbe + eine Viertel','Drei Achtel','Eine ganze + eine Viertel'],c:0,h:'Eine halbe Note sind zwei Viertelschläge.',e:'Halbe Note (2) plus zwei Viertelnoten (1 + 1) ergeben 4.',v:'<div class="beatrow"><span class="beat">𝅗𝅥</span><span class="beat">♩</span><span class="beat">♩</span></div>'},
-{topic:'rechnen',q:'Wie viele Achtelnoten passen zeitlich in eine ganze Note?',a:['2','4','6','8'],c:3,h:'Eine ganze Note enthält vier Viertelschläge; jeder Viertelschlag entspricht zwei Achteln.',e:'Vier Viertel entsprechen acht Achtelnoten.',v:'<div class="beatrow"><span class="beat">♪</span><span class="beat">♪</span><span class="beat">♪</span><span class="beat">♪</span><span class="beat">♪</span><span class="beat">♪</span><span class="beat">♪</span><span class="beat">♪</span></div>'},
-{topic:'rechnen',q:'Eine halbe Note und zwei Achtelnoten dauern zusammen wie viele Viertelschläge?',a:['2','3','4','5'],c:1,h:'Die halbe Note zählt 2 Viertel. Zwei Achtel sind zusammen 1 Viertel.',e:'2 + 1 = 3 Viertelschläge.',v:'<div class="music-symbol">𝅗𝅥　♪ ♪</div>'},
-{topic:'rechnen',q:'Welche Gruppe dauert genauso lang wie eine halbe Note?',a:['Eine Viertelnote + eine Achtelnote','Vier Achtelnoten','Drei Viertelnoten','Eine Achtelnote'],c:1,h:'Eine halbe Note entspricht zwei Vierteln und vier Achteln.',e:'Vier Achtelnoten ergeben zusammen eine halbe Note.',v:'<div class="music-symbol">𝅗𝅥 = ♪ ♪ ♪ ♪</div>'},
-{topic:'takt',q:'Was zeigt die Taktangabe 3/4 in einer einfachen Grundaufgabe an?',a:['Drei Viertelschläge pro Takt','Vier Takte pro Lied','Drei Noten im ganzen Lied','Das Lied muss dreimal gespielt werden'],c:0,h:'Die obere Zahl gibt hier die Anzahl der Schläge an.',e:'In einem 3/4-Takt werden drei Viertelschläge gezählt.',v:'<div class="beatrow"><span class="beat">1</span><span class="beat">2</span><span class="beat">3</span></div>'},
-{topic:'takt',q:'Wie nennt man das regelmäßige Grundgefühl, nach dem man beim Musizieren zählt?',a:['Metrum','Melodie','Pause','Notenkopf'],c:0,h:'Es hilft beim gemeinsamen, gleichmäßigen Musizieren.',e:'Das Metrum ist das regelmäßige Grundmaß der Musik.',v:'<div class="beatrow"><span class="beat">👣</span><span class="beat">👣</span><span class="beat">👣</span></div>'},
-{topic:'takt',q:'Welche Folge ergibt einen Viertelschlag?',a:['Zwei Achtelnoten','Eine halbe Note','Drei Viertelnoten','Zwei ganze Noten'],c:0,h:'Zwei Achtel sind zusammen eine Viertel.',e:'Zwei Achtelnoten haben zusammen die Dauer einer Viertelnote.',v:'<div class="music-symbol">♪ + ♪ = ♩</div>'},
-{topic:'schrift',q:'Wie heißt der ovale Teil einer Note?',a:['Notenkopf','Notenhals','Fähnchen','Taktstrich'],c:0,h:'Er kann ausgefüllt oder nicht ausgefüllt sein.',e:'Der ovale Teil heißt Notenkopf.',v:'<div class="music-symbol">♩</div>'},
-{topic:'schrift',q:'Was zeigt ein zusätzliches Fähnchen oder ein weiterer Balken bei einer Note meist an?',a:['Dass sie kürzer ist','Dass sie lauter sein muss','Dass sie eine Pause ist','Dass der Takt endet'],c:0,h:'Achtel und Sechzehntel werden oft durch Fähnchen oder Balken dargestellt.',e:'Fähnchen und zusätzliche Balken kennzeichnen kürzere Notenwerte.',v:'<div class="music-symbol">♪　♬</div>'},
-{topic:'schrift',q:'Wozu dient ein Taktstrich?',a:['Er trennt Takte voneinander','Er macht eine Note länger','Er ersetzt jede Pause','Er zeigt immer den Schluss des Liedes'],c:0,h:'Er steht senkrecht durch das Notensystem.',e:'Taktstriche teilen die Musik in Takte ein.',v:'<div class="music-symbol">𝄆　♩ ♩ ♩ ♩　│　♩ ♩ ♩ ♩</div>'}
-];
-const names={werte:'Notenwerte',pausen:'Notenpausen',rechnen:'Notenwerte rechnen',takt:'Takt und Rhythmus',schrift:'Notenschrift',mix:'Gemischte Runde'};
-let round=[],index=0,selected=null,points=0,answered=false,active='mix';
-function shuffle(a){return a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(x=>x[1])}
-function chooseTopic(topic){active=topic;let pool=topic==='mix'?bank:bank.filter(q=>q.topic===topic);round=shuffle(pool).slice(0,Math.min(8,pool.length));index=0;points=0;document.getElementById('points').textContent='0';document.getElementById('quiz').hidden=false;document.getElementById('quiz').scrollIntoView({behavior:'smooth',block:'start'});render()}
-function render(){const q=round[index];selected=null;answered=false;document.getElementById('topicTag').textContent=names[active];document.getElementById('countTag').textContent=`Frage ${index+1} von ${round.length}`;document.getElementById('bar').style.width=`${index/round.length*100}%`;document.getElementById('visual').innerHTML=q.v||'🎵';document.getElementById('question').textContent=q.q;document.getElementById('answers').innerHTML=q.a.map((a,i)=>`<button class="answer" onclick="selectAnswer(${i},this)">${String.fromCharCode(65+i)}. ${a}</button>`).join('');document.getElementById('feedback').textContent='';document.getElementById('feedback').className='feedback';document.getElementById('hint').textContent='';document.getElementById('check').disabled=false;document.getElementById('next').disabled=true}
-function selectAnswer(i,el){if(answered)return;selected=i;document.querySelectorAll('.answer').forEach(b=>b.classList.remove('selected'));el.classList.add('selected')}
-function checkAnswer(){if(answered)return;if(selected===null){document.getElementById('feedback').textContent='Wähle zuerst eine Antwort aus.';return}answered=true;const q=round[index],ok=selected===q.c;const buttons=[...document.querySelectorAll('.answer')];buttons[q.c].classList.add('correct');if(!ok)buttons[selected].classList.add('wrong');const fb=document.getElementById('feedback');fb.className='feedback '+(ok?'good':'bad');fb.textContent=(ok?'🎉 Richtig! +1 Stern. ':'Noch nicht ganz. ')+q.e;if(ok){points++;document.getElementById('points').textContent=points}document.getElementById('check').disabled=true;document.getElementById('next').disabled=false;document.getElementById('bar').style.width=`${(index+1)/round.length*100}%`;document.getElementById('next').textContent=index===round.length-1?'Runde beenden 🏁':'Weiter ➜'}
-function nextQuestion(){if(index<round.length-1){index++;render()}else{document.getElementById('question').textContent=`Runde geschafft! Du hast ${points} von ${round.length} Sternen gesammelt!`;document.getElementById('visual').innerHTML=points===round.length?'🏆🎉🎵':'🌟🎶';document.getElementById('answers').innerHTML=`<button onclick="chooseTopic(active)">Noch eine Runde spielen</button><button class="secondary" onclick="document.getElementById('topics').scrollIntoView({behavior:'smooth'})">Anderes Thema wählen</button>`;document.getElementById('feedback').textContent='Du kannst es gleich noch einmal versuchen – bei jeder Runde werden die Fragen neu gemischt.';document.getElementById('countTag').textContent='Runde beendet';document.getElementById('next').disabled=true;document.getElementById('check').disabled=true;document.getElementById('bar').style.width='100%'}}
-function showHint(){if(round[index])document.getElementById('hint').textContent=round[index].h}
-</script></body></html>
+const $=id=>document.getElementById(id);
+let current=[], totalRight=0, totalChecked=0, points=0;
+const rnd=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
+const fmt=n=>String(n).replace(/\B(?=(\d{3})+(?!\d))/g," ");
+function task(question, answer, unit="", explain=""){return {question,answer:String(answer),unit,explain};}
+function powerHTML(text){return String(text).replace(/\^(\d+)/g,"<sup>$1</sup>");}
+function make(type){
+  if(type==="zahlen"){
+    let n=[rnd(1000,99999),rnd(1000,99999),rnd(10000,99999)][rnd(0,2)];
+    return [task(`Vorgänger von ${fmt(n)}?`,n-1),task(`Nachfolger von ${fmt(n)}?`,n+1)];
+  }
+  if(type==="sub"){
+    let a=rnd(2000,50000),b=rnd(100,Math.min(a-1,19999));
+    return [task(`${fmt(a)} − ${fmt(b)} =`,a-b,"","Ziehe Hunderter, Zehner und Einer nacheinander ab.")];
+  }
+  if(type==="um"){
+    const choices=[
+      ()=>{let x=rnd(12,95)*1000+rnd(0,9)*100+rnd(0,9)*10;return task(`${fmt(x)} m = ? km und m (Antwort z. B. 3 km 250 m)`,`${Math.floor(x/1000)} km ${x%1000} m`,"","1 km = 1 000 m.")},
+      ()=>{let x=rnd(2,15)*1000+rnd(1,9)*100+rnd(1,9)*10+rnd(1,9);return task(`${fmt(x)} g = ? kg und g (Antwort z. B. 2 kg 350 g)`,`${Math.floor(x/1000)} kg ${x%1000} g`,"","1 kg = 1 000 g.")},
+      ()=>{let m=rnd(2,25),c=rnd(1,99);let x=m*100+c;return task(`${fmt(x)} cm = ? m und cm (Antwort z. B. 2 m 35 cm)`,`${Math.floor(x/100)} m ${x%100} cm`,"","100 cm = 1 m.")},
+      ()=>{let kg=rnd(1,18),g=rnd(100,999);let x=kg*1000+g;return task(`${fmt(x)} g = ? kg und g (Antwort z. B. 4 kg 125 g)`,`${Math.floor(x/1000)} kg ${x%1000} g`,"","1 000 g = 1 kg.")},
+      ()=>{let km=rnd(1,12),m=rnd(100,999);let x=km*1000+m;return task(`${fmt(x)} m = ? km und m (Antwort z. B. 4 km 125 m)`,`${Math.floor(x/1000)} km ${x%1000} m`,"","1 000 m = 1 km.")},
+      ()=>{let m=rnd(2,35),cm=rnd(1,99);let x=m*100+cm;return task(`${fmt(x)} cm = ? mm`,x*10,"mm","1 cm = 10 mm.")},
+      ()=>{let l=rnd(2,15),ml=rnd(100,999);let x=l*1000+ml;return task(`${fmt(x)} ml = ? l und ml (Antwort z. B. 3 l 250 ml)`,`${Math.floor(x/1000)} l ${x%1000} ml`,"","1 l = 1 000 ml.")}
+    ];return [choices[rnd(0,choices.length-1)]()];
+  }
+  if(type==="klammern"){
+    const a=rnd(20,180),b=rnd(10,90),c=rnd(5,50);
+    const kind=rnd(0,3);
+    if(kind===0)return [task(`(${a} + ${b}) − ${c} =`,a+b-c)];
+    if(kind===1)return [task(`${a+b} − (${a} + ${c}) =`,b-c<0?Math.abs(b-c):b-c,"","Rechne zuerst in der Klammer.")].map(t=>{if(Number(t.answer)<0){t.answer=String(a+b-(a+c));}return t;});
+    if(kind===2){let x=rnd(4,15),y=rnd(4,15);return [task(`(${x} × ${y}) + ${a} =`,x*y+a)];}
+    let d=rnd(3,9),q=rnd(5,25);return [task(`(${q*d} − ${d*2}) : ${d} =`,q-2)];
+  }
+  if(type==="division"){
+    let d=rnd(3,12),q=rnd(12,250);return [task(`${fmt(d*q)} : ${d} =`,q)];
+  }
+  if(type==="rest"){
+    let d=rnd(4,12),q=rnd(8,80),r=rnd(1,d-1);return [task(`${fmt(d*q+r)} : ${d} = ? (Ergebnis und Rest)`,`${q} Rest ${r}`)];
+  }
+  if(type==="mal"){
+    let a=rnd(12,999),b=rnd(3,25);return [task(`${fmt(a)} × ${b} =`,a*b)];
+  }
+  if(type==="potenzen"){
+    const base=rnd(2,6), exponent=rnd(2,4);
+    const value=base**exponent;
+    const kind=rnd(0,2);
+    if(kind===0)return [task(`${base}^${exponent} = ?`,value,"","Eine Potenz bedeutet, dass du die Grundzahl ${base} ${exponent}-mal mit sich selbst multiplizierst.")];
+    if(kind===1)return [task(`${base}^${exponent} = ? (als Multiplikation schreiben und ausrechnen)`,`${Array(exponent).fill(base).join(" × ")} = ${value}`,"","Die Grundzahl wird so oft als Faktor geschrieben, wie der Exponent angibt.")];
+    return [task(`Schreibe als Potenz und berechne: ${Array(exponent).fill(base).join(" × ")}`,`${base}^${exponent} = ${value}`,"","Die Anzahl gleicher Faktoren ist der Exponent.")];
+  }
+  if(type==="rechner"){
+    const tasks=[
+      task("Berechne mit dem Casio fx-82DEX: 2^5 =",32,"","Gib 2 ein, drücke die Potenztaste x^□, gib 5 ein und drücke =."),
+      task("Berechne mit dem Casio fx-82DEX: 3^4 =",81,"","Nutze die Taste x^□ für die Potenz."),
+      task("Berechne mit dem Casio fx-82DEX: 12^2 =",144,"","Der Exponent 2 bedeutet: 12 × 12."),
+      task("Berechne mit dem Casio fx-82DEX: 5^3 =",125,"","Der Exponent 3 bedeutet: 5 × 5 × 5."),
+      task("Berechne mit dem Casio fx-82DEX: 2^8 =",256,"","Nutze die Potenztaste x^□ und kontrolliere die Anzeige vor =.")
+    ];
+    return tasks;
+  }
+  const types=["zahlen","sub","um","klammern","division","rest","mal","potenzen"];
+  return make(types[rnd(0,types.length-1)]);
+}
+function normalize(s){return String(s).toLowerCase().trim().replace(/,/g,".").replace(/\s+/g," ").replace(/kilometer/g,"km").replace(/meter/g,"m").replace(/gramm/g,"g").replace(/kilogramm/g,"kg").replace(/liter/g,"l").replace(/milliliter/g,"ml");}
+
+const noteNames=["g","a","h","c1","d1","e1","f1","g1","a1","h1","c2","d2","e2","f2","g2","a2","h2","c3"];
+function musicTask(){
+ const k=Math.floor(Math.random()*3);
+ if(k===0){const n=Math.floor(Math.random()*noteNames.length);return {kind:"identify",question:"Wie heißt diese Note im Violinschlüssel?",note:n,answer:noteNames[n],explain:"Lies die Note von unten nach oben. Die tiefste Note in diesem Übungsbereich ist g."};}
+ if(k===1){const n=Math.floor(Math.random()*noteNames.length);return {kind:"draw",question:`Zeichne die Note ${noteNames[n]} in die Notenlinien. Klicke an die passende Höhe.`,note:n,answer:noteNames[n],explain:"Die Note muss auf der richtigen Linie oder im richtigen Zwischenraum liegen."};}
+ const vals=[["Ganze Note","𝅝","4 Schläge"],["Halbe Note","𝅗𝅥","2 Schläge"],["Viertelnote","♩","1 Schlag"],["Achtelnote","♪","½ Schlag"]];
+ const v=vals[Math.floor(Math.random()*vals.length)];
+ return {kind:"value",question:`Wie heißt dieser Notenwert und wie viele Schläge zählt er?`,symbol:v[1],answer:`${v[0]} ${v[2]}`,explain:"Merke: Ganze = 4, Halbe = 2, Viertel = 1, Achtel = ein halber Schlag."};
+}
+function staffSvg(noteIndex=null, clickable=false, selected=null){
+ let lines=[48,68,88,108,128];
+ let svg=`<svg class="music-staff" viewBox="0 0 650 200" role="${clickable?'button':'img'}" aria-label="Notenlinien im Violinschlüssel">`;
+ lines.forEach(y=>svg+=`<line x1="35" y1="${y}" x2="615" y2="${y}"/>`);
+ svg+=`<text x="38" y="112" font-size="72" fill="#172a46">𝄞</text>`;
+ // position mapping: e1 is bottom line; g is three diatonic steps below it
+ function yy(i){return 128-(i-5)*10;}
+ function nshape(i,x=330,color="#172a46"){const y=yy(i);let out="";if(i<=5&&i%2===1)out+=`<line class="ledger" x1="${x-17}" y1="${y}" x2="${x+17}" y2="${y}"/>`;if(i>=9&&i%2===1)out+=`<line class="ledger" x1="${x-17}" y1="${y}" x2="${x+17}" y2="${y}"/>`;out+=`<ellipse class="note" cx="${x}" cy="${y}" rx="10" ry="6.5" transform="rotate(-20 ${x} ${y})" ${color!=="#172a46"?`style="fill:${color};stroke:${color}"`:""}/>`;return out;}
+ if(noteIndex!==null)svg+=nshape(noteIndex,350);
+ if(selected!==null)svg+=nshape(selected,500,"#e63946");
+ if(clickable){svg+=`<rect x="35" y="10" width="580" height="150" fill="transparent" data-staff-click="yes"/>`;svg+=`<text x="350" y="158" font-size="12" text-anchor="middle" fill="#526779">Hier klicken, um die Note einzuzeichnen</text>`;}
+ svg+="</svg>";return svg;
+}
+function musicValueMarkup(){return `<div class="music-symbol" aria-hidden="true">𝅝　𝅗𝅥　♩　♪</div><p class="hint">Ganze Note = 4 Schläge · Halbe Note = 2 · Viertelnote = 1 · Achtelnote = ½</p>`;}
+
+function generate(){
+  current=[];totalRight=0;totalChecked=0;points=0;
+  const type="musik";
+  const target=10;
+  let attempts=0;
+  while(current.length<target && attempts<100){
+    attempts++;
+    const t=[musicTask()];
+    t.forEach(x=>{if(current.length<target)current.push({...x,id:current.length,done:false});});
+  }
+  $("totalTasks").textContent=current.length;
+  render();stats();
+}
+function render(){
+  $("tasks").innerHTML="";
+  current.forEach((t,i)=>{
+    const el=document.createElement("article");el.className="task";
+    if(t.kind){
+      let body=`<h3>Aufgabe ${i+1}</h3><div class="equation">${t.question}</div>`;
+      if(t.kind==="identify") body+=staffSvg(t.note)+`<div class="taskrow"><input class="answer" type="text" placeholder="Notenname, z. B. c1" aria-label="Notenname"><button class="check">Prüfen</button></div>`;
+      else if(t.kind==="draw") body+=staffSvg(null,true)+`<p class="hint">Klicke in die Notenlinien auf die Höhe, an der die Note ${noteNames[t.note]} liegen muss.</p><button class="check">Note prüfen</button>`;
+      else body+=musicValueMarkup()+`<div class="taskrow"><input class="answer" type="text" placeholder="z. B. Viertelnote 1 Schlag" aria-label="Notenwert und Schläge"><button class="check">Prüfen</button></div>`;
+      body+=`<label style="display:block;margin-top:12px;font-weight:650" for="work-${i}">Notizen (optional)</label><textarea class="work" id="work-${i}" placeholder="Schreibe hier deine Gedanken auf …"></textarea><div class="taskbuttons"><button class="secondary solutionBtn" type="button">Musterlösung anzeigen</button></div><div class="solution" hidden></div><div class="feedback" aria-live="polite"></div>`;
+      el.innerHTML=body;
+      if(t.kind==="draw"){
+        const svg=el.querySelector("svg");
+        svg.addEventListener("click",ev=>{const rect=svg.getBoundingClientRect();const y=(ev.clientY-rect.top)/rect.height*200;let idx=Math.round(5+(128-y)/10);idx=Math.max(0,Math.min(noteNames.length-1,idx));el.dataset.clickednote=noteNames[idx];svg.outerHTML=staffSvg(null,false,idx);});
+      }
+      el.querySelector(".check").addEventListener("click",()=>checkOne(i,el));
+      const inp=el.querySelector("input");if(inp)inp.addEventListener("keydown",e=>{if(e.key==="Enter")checkOne(i,el);});
+      el.querySelector(".solutionBtn").addEventListener("click",()=>{const box=el.querySelector(".solution");box.hidden=!box.hidden;box.textContent=box.hidden?"":`Lösung: ${t.answer} — ${t.explain}`;el.querySelector(".solutionBtn").textContent=box.hidden?"Musterlösung anzeigen":"Musterlösung ausblenden";});
+      $("tasks").appendChild(el);return;
+    }
+    el.innerHTML=`<h3>Aufgabe ${i+1}</h3><div class="taskrow"><div class="equation"></div><input class="answer" type="text" autocomplete="off" aria-label="Antwort zu Aufgabe ${i+1}" placeholder="Deine Antwort"><button class="check">Prüfen</button></div><label style="display:block;margin-top:12px;font-weight:650" for="work-${i}">Mein Rechenweg (optional)</label><textarea class="work" id="work-${i}" placeholder="Schreibe deine Zwischenschritte auf … (z. B. 3 × 3 × 3 = 27)"></textarea><div class="taskbuttons"><button class="secondary solutionBtn" type="button">Musterlösung anzeigen</button></div><div class="solution" hidden></div><div class="feedback" aria-live="polite"></div>`;
+    el.querySelector(".equation").innerHTML=powerHTML(t.question);
+    el.querySelector("input").value="";
+    el.querySelector(".check").addEventListener("click",()=>checkOne(i,el));
+    el.querySelector("input").addEventListener("keydown",e=>{if(e.key==="Enter")checkOne(i,el);});
+    el.querySelector(".solutionBtn").addEventListener("click",()=>{
+      const box=el.querySelector(".solution");
+      box.hidden=!box.hidden;
+      if(!box.hidden){box.innerHTML=powerHTML(`Lösung: ${t.answer}${t.unit ? " "+t.unit : ""}${t.explain ? " — Tipp: "+t.explain : ""}`);el.querySelector(".solutionBtn").textContent="Musterlösung ausblenden";}
+      else el.querySelector(".solutionBtn").textContent="Musterlösung anzeigen";
+    });
+    $("tasks").appendChild(el);
+  });
+}
+function checkOne(i,el){
+  const t=current[i];if(t.done)return;
+  const input=el.querySelector("input"),feedback=el.querySelector(".feedback");
+  let user=input?normalize(input.value):"",ans=normalize(t.answer);
+  if(t.kind==="draw"){user=normalize(el.dataset.clickednote||"");}
+  let ok=user===ans;
+  if(t.kind==="value"){ok=user.replace(/schläge?/g,"schlag").replace(/viertelnote/g,"viertelnote")===ans.replace(/schläge?/g,"schlag");}
+  if(t.kind==="value" && user===normalize(t.answer.split(" ")[0]))ok=true;
+  if(!ok && !/[a-z]/i.test(ans) && /^-?\d+(\.\d+)?$/.test(user))ok=Number(user)===Number(ans);
+  if(t.kind==="value"){const aliases={"ganze note 4 schläge":"ganze note 4 schläge","halbe note 2 schläge":"halbe note 2 schläge","viertelnote 1 schlag":"viertelnote 1 schlag","achtelnote ½ schlag":"achtelnote ½ schlag"};ok=Object.values(aliases).includes(user);}
+  t.done=true;totalChecked++;
+  if(ok){totalRight++;points++;feedback.textContent="Richtig! Sehr gut! Dein Rechenweg bleibt zum Nachvollziehen stehen.";feedback.className="feedback correct";}
+  else{feedback.innerHTML=powerHTML(`Noch nicht ganz. Richtige Lösung: ${t.answer}${t.unit ? " "+t.unit : ""}${t.explain ? " – "+t.explain : ""}. Du kannst die Musterlösung zusätzlich öffnen.`);feedback.className="feedback wrong";}
+  input.disabled=true;el.querySelector(".check").disabled=true;stats();
+}
+function stats(){$("right").textContent=totalRight;$("checked").textContent=totalChecked;$("points").textContent=points;}
+$("newRound").addEventListener("click",generate);
+$("checkAll").addEventListener("click",()=>[...$("tasks").children].forEach((el,i)=>checkOne(i,el)));
+generate();
+</script>
+</body>
+</html>
