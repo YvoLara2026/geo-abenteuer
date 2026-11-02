@@ -137,7 +137,7 @@ function musicTask(){
  if(k===1){const n=Math.floor(Math.random()*noteNames.length);return {kind:"draw",question:`Zeichne die Note ${noteNames[n]} in die Notenlinien. Klicke an die passende Höhe.`,note:n,answer:noteNames[n],explain:"Die Note muss auf der richtigen Linie oder im richtigen Zwischenraum liegen."};}
  const vals=[["Ganze Note","𝅝","4 Schläge"],["Halbe Note","𝅗𝅥","2 Schläge"],["Viertelnote","♩","1 Schlag"],["Achtelnote","♪","½ Schlag"]];
  const v=vals[Math.floor(Math.random()*vals.length)];
- return {kind:"value",question:`Wie heißt dieser Notenwert und wie viele Schläge zählt er?`,symbol:v[1],answer:`${v[0]} ${v[2]}`,explain:"Merke: Ganze = 4, Halbe = 2, Viertel = 1, Achtel = ein halber Schlag."};
+ return {kind:"value",question:"Ordne jeder der vier Noten den richtigen Namen und die passende Anzahl an Schlägen zu.",values:vals,answer:"Ganze Note = 4 Schläge; Halbe Note = 2 Schläge; Viertelnote = 1 Schlag; Achtelnote = ½ Schlag",explain:"Ganze = 4, Halbe = 2, Viertel = 1, Achtel = ein halber Schlag."};
 }
 function staffSvg(noteIndex=null, clickable=false, selected=null){
  let lines=[48,68,88,108,128];
@@ -152,7 +152,10 @@ function staffSvg(noteIndex=null, clickable=false, selected=null){
  if(clickable){svg+=`<rect x="35" y="10" width="580" height="150" fill="transparent" data-staff-click="yes"/>`;svg+=`<text x="350" y="158" font-size="12" text-anchor="middle" fill="#526779">Hier klicken, um die Note einzuzeichnen</text>`;}
  svg+="</svg>";return svg;
 }
-function musicValueMarkup(){return `<div class="music-symbol" aria-hidden="true">𝅝　𝅗𝅥　♩　♪</div><p class="hint">Ganze Note = 4 Schläge · Halbe Note = 2 · Viertelnote = 1 · Achtelnote = ½</p>`;}
+function musicValueMarkup(){
+ const vals=[["Ganze Note","𝅝","4 Schläge"],["Halbe Note","𝅗𝅥","2 Schläge"],["Viertelnote","♩","1 Schlag"],["Achtelnote","♪","½ Schlag"]];
+ return `<div class="value-list">${vals.map((v,i)=>`<div class="taskrow" style="margin:10px 0;padding:10px;background:#f4f8fc;border-radius:12px"><span class="music-symbol" aria-label="Notensymbol">${v[1]}</span><label>Notenname <select class="value-name" data-row="${i}"><option value="">Bitte auswählen</option>${vals.map(x=>`<option>${x[0]}</option>`).join("")}</select></label><label>Schläge <select class="value-beats" data-row="${i}"><option value="">Bitte auswählen</option><option>4</option><option>2</option><option>1</option><option>½</option></select></label></div>`).join("")}</div>`;
+}
 
 function generate(){
   current=[];totalRight=0;totalChecked=0;points=0;
@@ -175,7 +178,7 @@ function render(){
       let body=`<h3>Aufgabe ${i+1}</h3><div class="equation">${t.question}</div>`;
       if(t.kind==="identify") body+=staffSvg(t.note)+`<div class="taskrow"><input class="answer" type="text" placeholder="Notenname, z. B. c1" aria-label="Notenname"><button class="check">Prüfen</button></div>`;
       else if(t.kind==="draw") body+=staffSvg(null,true)+`<p class="hint">Klicke in die Notenlinien auf die Höhe, an der die Note ${noteNames[t.note]} liegen muss.</p><button class="check">Note prüfen</button>`;
-      else body+=musicValueMarkup()+`<div class="taskrow"><input class="answer" type="text" placeholder="z. B. Viertelnote 1 Schlag" aria-label="Notenwert und Schläge"><button class="check">Prüfen</button></div>`;
+      else body+=musicValueMarkup()+`<div class="taskrow"><button class="check">Zuordnungen prüfen</button></div>`;
       body+=`<label style="display:block;margin-top:12px;font-weight:650" for="work-${i}">Notizen (optional)</label><textarea class="work" id="work-${i}" placeholder="Schreibe hier deine Gedanken auf …"></textarea><div class="taskbuttons"><button class="secondary solutionBtn" type="button">Musterlösung anzeigen</button></div><div class="solution" hidden></div><div class="feedback" aria-live="polite"></div>`;
       el.innerHTML=body;
       if(t.kind==="draw"){
@@ -205,16 +208,14 @@ function checkOne(i,el){
   const t=current[i];if(t.done)return;
   const input=el.querySelector("input"),feedback=el.querySelector(".feedback");
   let user=input?normalize(input.value):"",ans=normalize(t.answer);
+  if(t.kind==="value"){const names=["Ganze Note","Halbe Note","Viertelnote","Achtelnote"],beats=["4","2","1","½"];const ns=[...el.querySelectorAll(".value-name")],bs=[...el.querySelectorAll(".value-beats")];const okValues=ns.every((x,j)=>x.value===names[j])&&bs.every((x,j)=>x.value===beats[j]);t.done=true;totalChecked++;if(okValues){totalRight++;points++;feedback.textContent="Richtig! Du hast alle vier Noten richtig zugeordnet.";feedback.className="feedback show correct";}else{feedback.textContent="Noch nicht ganz. Richtige Zuordnung: Ganze Note = 4, Halbe Note = 2, Viertelnote = 1, Achtelnote = ½ Schlag.";feedback.className="feedback show wrong";}ns.forEach(x=>x.disabled=true);bs.forEach(x=>x.disabled=true);el.querySelector(".check").disabled=true;stats();return;}
   if(t.kind==="draw"){user=normalize(el.dataset.clickednote||"");}
   let ok=user===ans;
-  if(t.kind==="value"){ok=user.replace(/schläge?/g,"schlag").replace(/viertelnote/g,"viertelnote")===ans.replace(/schläge?/g,"schlag");}
-  if(t.kind==="value" && user===normalize(t.answer.split(" ")[0]))ok=true;
   if(!ok && !/[a-z]/i.test(ans) && /^-?\d+(\.\d+)?$/.test(user))ok=Number(user)===Number(ans);
-  if(t.kind==="value"){const aliases={"ganze note 4 schläge":"ganze note 4 schläge","halbe note 2 schläge":"halbe note 2 schläge","viertelnote 1 schlag":"viertelnote 1 schlag","achtelnote ½ schlag":"achtelnote ½ schlag"};ok=Object.values(aliases).includes(user);}
   t.done=true;totalChecked++;
   if(ok){totalRight++;points++;feedback.textContent="Richtig! Sehr gut! Dein Rechenweg bleibt zum Nachvollziehen stehen.";feedback.className="feedback correct";}
   else{feedback.innerHTML=powerHTML(`Noch nicht ganz. Richtige Lösung: ${t.answer}${t.unit ? " "+t.unit : ""}${t.explain ? " – "+t.explain : ""}. Du kannst die Musterlösung zusätzlich öffnen.`);feedback.className="feedback wrong";}
-  input.disabled=true;el.querySelector(".check").disabled=true;stats();
+  if(input)input.disabled=true;el.querySelector(".check").disabled=true;stats();
 }
 function stats(){$("right").textContent=totalRight;$("checked").textContent=totalChecked;$("points").textContent=points;}
 $("newRound").addEventListener("click",generate);
