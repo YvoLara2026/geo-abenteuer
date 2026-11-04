@@ -32,8 +32,31 @@ button.secondary{background:#6c7a89;box-shadow:0 3px 0 #46525e}button.green{back
 .feedback.show{display:block}.correct{color:#176b43;background:#e6fff0}.wrong{color:#a52d35;background:#fff0eb}
 .hint{font-size:.93rem;color:#526779}.work{width:100%;min-height:115px;resize:vertical;margin-top:10px;border:2px solid #d9e5ef;border-radius:13px;padding:12px;font:inherit;color:var(--ink);background:#f8fbff}
 .solution{margin-top:10px;padding:12px;background:#fff3bf;border-radius:13px;border:1px solid #f4d98b}.taskbuttons{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-.footer{font-size:.9rem;color:#526779;text-align:center;margin-top:20px}
-@media(max-width:600px){main{padding:14px 10px 28px}.panel,.task{padding:14px}.taskrow{align-items:stretch}.equation{min-width:100%}.answer{flex:1;width:100%}button{flex:1}}
+.footer{font-size:.9rem;color:#526779;text-align:center;margin-top:20px}\n#additionChoices button{min-width:105px;font-size:1.2rem;background:#eaf3fb;color:#183153;border:2px solid #c9dbea;box-shadow:0 3px 0 #b8d4e8}\n#additionChoices button:hover{background:#dceeff}\n#additionChoices button:disabled{opacity:.7}\n#additionChoices button:focus-visible{outline:3px solid #ffd166;outline-offset:3px}
+
+
+/* Aufgabenfuchs-inspiriertes Seitenregister */
+.learning-layout{display:grid;grid-template-columns:260px minmax(0,1fr);gap:18px;align-items:start;max-width:1380px;margin:0 auto}
+.register{position:sticky;top:12px;align-self:start;background:#f8fbff;border:2px solid #b8d4e8;border-radius:18px;padding:15px;box-shadow:0 5px 0 #c7ddeb;max-height:calc(100vh - 24px);overflow-y:auto}
+.register h2{font-size:1.25rem;margin:0 0 4px}
+.register-note{margin:0 0 12px;color:var(--muted);font-size:.9rem}
+#topicRegister{display:flex;flex-direction:column;gap:7px}
+.register-tab{width:100%;text-align:left;background:#eaf3fb;color:#183153;box-shadow:none;border:1px solid #c9dbea;border-radius:10px;padding:10px 12px;font-weight:650}
+.register-tab:hover{background:#dceeff;filter:none}
+.register-tab.active{background:#256fc1;color:#fff;border-color:#256fc1;box-shadow:inset 4px 0 0 #ffd166}
+.learning-content{min-width:0}
+.learning-content .task{margin-bottom:14px}
+.round-heading{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}
+.round-heading .controls{justify-content:flex-end}
+@media(max-width:760px){
+ .learning-layout{grid-template-columns:1fr;gap:12px}
+ .register{position:relative;top:auto;max-height:none;overflow:visible}
+ #topicRegister{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+ .register-tab{font-size:.88rem;padding:9px}
+ .round-heading .controls{width:100%;justify-content:flex-start}
+}
+@media(max-width:420px){#topicRegister{grid-template-columns:1fr}}
+\n@media(max-width:600px){main{padding:14px 10px 28px}.panel,.task{padding:14px}.taskrow{align-items:stretch}.equation{min-width:100%}.answer{flex:1;width:100%}button{flex:1}}
 </style>
 </head>
 <body>
@@ -42,42 +65,82 @@ button.secondary{background:#6c7a89;box-shadow:0 3px 0 #46525e}button.green{back
   <p>Dein interaktiver Mathe-Trainer · Klasse 5 Gymnasium</p>
 </header>
 <main>
-  <div class="toplink"><a class="home-link" href="index.html">🌍 Zurück zum Geo-Abenteuer</a></div>
-  <section class="panel">
-    <strong>Wähle ein Thema:</strong>
-    <div class="controls" style="margin-top:10px">
-      <select id="topic" aria-label="Übungsthema">
-        <option value="mix">Gemischte Runde</option>
-        <option value="zahlen">Vorgänger und Nachfolger</option>
-        <option value="sub">Subtraktion</option>
-        <option value="um">Schwieriges Umrechnen</option>
-        <option value="klammern">Klammeraufgaben</option>
-        <option value="division">Division ohne Rest</option>
-        <option value="rest">Division mit Rest</option>
-        <option value="mal">Multiplikation</option>
-        <option value="potenzen">Potenzen – Einstieg</option>
-        <option value="rechner">Potenzen mit dem Taschenrechner</option>
-      </select>
-      <button id="newRound">Neue Aufgaben</button>
-      <button class="secondary" id="checkAll">Alle prüfen</button>
+  <div class="learning-layout">
+    <aside class="register" aria-label="Mathematik-Themen">
+      <h2>📚 Themen</h2>
+      <p class="register-note">Wähle ein Übungsgebiet:</p>
+      <nav id="topicRegister">
+        <button class="register-tab active" data-topic="mix">Gemischte Runde</button>
+        <button class="register-tab" data-topic="zahlen">Vorgänger &amp; Nachfolger</button>
+        <button class="register-tab" data-topic="additionZeit">⏱️ Addition auf Zeit</button>
+        <button class="register-tab" data-topic="sub">Subtraktion</button>
+        <button class="register-tab" data-topic="um">Umrechnen</button>
+        <button class="register-tab" data-topic="klammern">Klammeraufgaben</button>
+        <button class="register-tab" data-topic="division">Division ohne Rest</button>
+        <button class="register-tab" data-topic="rest">Division mit Rest</button>
+        <button class="register-tab" data-topic="mal">Multiplikation</button>
+        <button class="register-tab" data-topic="potenzen">Potenzen – Einstieg</button>
+        <button class="register-tab" data-topic="rechner">Potenzen mit Taschenrechner</button>
+      </nav>
+    </aside>
+    <div class="learning-content">
+      <section class="panel">
+        <div class="round-heading">
+          <div><strong id="selectedTopic">Gemischte Runde</strong><p class="hint" style="margin:5px 0 0">Wähle links ein Thema. Mit „Neue Aufgaben“ erhältst du eine frische Runde.</p></div>
+          <div class="controls">
+            <button id="newRound">🔄 Neue Aufgaben</button>
+            <button class="secondary" id="checkAll">Alle prüfen</button>
+          </div>
+        </div>
+        <div class="stats">
+          <div class="stat">Richtig: <span id="right">0</span></div>
+          <div class="stat">Geprüft: <span id="checked">0</span> / <span id="totalTasks">10</span></div>
+          <div class="stat">Punkte in dieser Runde: <span id="points">0</span></div>
+        </div>
+        <p class="hint"><b>Merke:</b> Bei 3<sup>4</sup> ist 3 die <b>Basis</b> (Grundzahl) und 4 der <b>Exponent</b>. Der Exponent sagt, wie oft die Basis als Faktor vorkommt: 3 × 3 × 3 × 3 = 81. Eine Potenz ist eine Kurzschreibweise für eine Multiplikation gleicher Faktoren. Für die Taschenrechner-Aufgaben nutze beim Casio fx-82DEX die Potenztaste x<sup>□</sup>. Deine Antwort wird automatisch geprüft; der freiwillige Rechenweg wird nicht automatisch bewertet.</p>
+      </section>
+      <section id="timedAddition" class="panel" hidden aria-live="polite">
+        <div class="round-heading">
+          <div><strong>⏱️ Addition auf Zeit</strong><p class="hint" style="margin:5px 0 0">Löse so viele Plusaufgaben wie möglich. Wähle das richtige Ergebnis.</p></div>
+          <div class="controls">
+            <label for="additionDuration"><b>Zeit pro Aufgabe:</b></label>
+            <select id="additionDuration" style="min-width:115px;flex:0 1 auto">
+              <option value="2">2 Sekunden</option>
+              <option value="3">3 Sekunden</option>
+              <option value="4" selected>4 Sekunden</option>
+              <option value="5">5 Sekunden</option>
+              <option value="6">6 Sekunden</option>
+            </select>
+            <button id="startAddition" class="green">▶ Start</button>
+          </div>
+        </div>
+        <div class="stats">
+          <div class="stat">⏳ Restzeit: <span id="additionTimer">4</span> s</div>
+          <div class="stat">✅ Richtig: <span id="additionRight">0</span></div>
+          <div class="stat">❌ Falsch: <span id="additionWrong">0</span></div>
+          <div class="stat">Aufgaben: <span id="additionCount">0</span></div>
+        </div>
+        <div id="additionPlay" class="task" style="margin:16px 0 0;text-align:center">
+          <p class="hint">Drücke auf „Start“, wenn du bereit bist.</p>
+          <div id="additionQuestion" style="font-size:clamp(2rem,7vw,3.5rem);font-weight:800;margin:18px 0">? + ? = ?</div>
+          <div id="additionChoices" class="controls" style="justify-content:center"></div>
+          <div id="additionFeedback" class="feedback" style="display:block;min-height:42px" aria-live="polite"></div>
+        </div>
+        <div id="additionResult" class="solution" hidden></div>
+        <p class="hint" style="margin-bottom:0">Jede Aufgabe hat eine eigene Zeit. Bei einer falschen Antwort oder wenn die Zeit abläuft, geht es automatisch zur nächsten Aufgabe.</p>
+      </section>
+      <section id="tasks" aria-live="polite"></section>
+      <section class="panel">
+        <strong>So lernst du am besten:</strong>
+        <p style="margin-bottom:0">Rechne zuerst selbst. Schreibe deinen Rechenweg in das große Feld. Bei den Taschenrechner-Aufgaben darfst du den Casio fx-82DEX verwenden. Prüfe danach deine Antwort. Lies bei Fehlern die richtige Lösung und starte eine neue Runde.</p>
+      </section>
+      <div class="footer">Mathe-Training · Klasse 5 · Die Aufgaben werden bei jeder Runde neu erstellt.</div>
     </div>
-    <div class="stats">
-      <div class="stat">Richtig: <span id="right">0</span></div>
-      <div class="stat">Geprüft: <span id="checked">0</span> / <span id="totalTasks">10</span></div>
-      <div class="stat">Punkte in dieser Runde: <span id="points">0</span></div>
-    </div>
-    <p class="hint">Tipp: Du kannst zu jeder Aufgabe deinen Rechenweg notieren. Bei Potenzen zeigt der kleine Exponent, wie oft die Grundzahl mit sich selbst multipliziert wird. Für die Taschenrechner-Aufgaben nutze beim Casio fx-82DEX die Potenztaste x^□. Das Programm prüft automatisch das Ergebnis; den freien Text zum Rechenweg bewertet es nicht automatisch. Bei Division mit Rest schreibst du zum Beispiel <b>13 Rest 2</b>.</p>
-  </section>
-  <section id="tasks" aria-live="polite"></section>
-  <section class="panel">
-    <strong>So lernst du am besten:</strong>
-    <p style="margin-bottom:0">Rechne zuerst selbst. Schreibe deinen Rechenweg in das große Feld. Bei den fünf Taschenrechner-Aufgaben darfst du den Casio fx-82DEX verwenden. Prüfe danach deine Antwort. Lies bei Fehlern die richtige Lösung und starte eine neue Runde.</p>
-  </section>
-  <div class="footer">Mathe-Training · Klasse 5 · Die Aufgaben werden bei jeder Runde neu erstellt.</div>
+  </div>
 </main>
 <script>
 const $=id=>document.getElementById(id);
-let current=[], totalRight=0, totalChecked=0, points=0;
+let current=[], totalRight=0, totalChecked=0, points=0, activeTopic="mix";
 const rnd=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
 const fmt=n=>String(n).replace(/\B(?=(\d{3})+(?!\d))/g," ");
 function task(question, answer, unit="", explain=""){return {question,answer:String(answer),unit,explain};}
@@ -120,12 +183,35 @@ function make(type){
     let a=rnd(12,999),b=rnd(3,25);return [task(`${fmt(a)} × ${b} =`,a*b)];
   }
   if(type==="potenzen"){
-    const base=rnd(2,6), exponent=rnd(2,4);
-    const value=base**exponent;
-    const kind=rnd(0,2);
-    if(kind===0)return [task(`${base}^${exponent} = ?`,value,"","Eine Potenz bedeutet, dass du die Grundzahl ${base} ${exponent}-mal mit sich selbst multiplizierst.")];
-    if(kind===1)return [task(`${base}^${exponent} = ? (als Multiplikation schreiben und ausrechnen)`,`${Array(exponent).fill(base).join(" × ")} = ${value}`,"","Die Grundzahl wird so oft als Faktor geschrieben, wie der Exponent angibt.")];
-    return [task(`Schreibe als Potenz und berechne: ${Array(exponent).fill(base).join(" × ")}`,`${base}^${exponent} = ${value}`,"","Die Anzahl gleicher Faktoren ist der Exponent.")];
+    // Abwechslungsreiche Einstiegsaufgaben: Bedeutung, Basis, Exponent,
+    // Produktdarstellung und Berechnung. Jede Runde erzeugt neue Zahlen.
+    const base=rnd(2,8), exponent=rnd(2,5), value=base**exponent;
+    const kind=rnd(0,5);
+    if(kind===0){
+      return [task(`Berechne die Potenz: ${base}^${exponent} = ?`,value,"",
+        `Rechne ${Array(exponent).fill(base).join(" × ")}. Der Exponent ${exponent} sagt, wie oft die Basis ${base} als Faktor vorkommt.`)];
+    }
+    if(kind===1){
+      return [task(`Welche Zahl ist die BASIS (Grundzahl) in ${base}^${exponent}?`,base,"",
+        `Die Basis ist die große Zahl. In ${base}^${exponent} ist die Basis ${base}.`)];
+    }
+    if(kind===2){
+      return [task(`Wie lautet der EXPONENT in ${base}^${exponent}?`,exponent,"",
+        `Der Exponent ist die kleine hochgestellte Zahl. Er lautet ${exponent}.`)];
+    }
+    if(kind===3){
+      return [task(`Wie oft wird die Basis ${base} als Faktor geschrieben, wenn du ${base}^${exponent} ausmultiplizierst?`,exponent,"-mal",
+        `Der Exponent gibt an, wie oft die Basis als Faktor vorkommt: ${Array(exponent).fill(base).join(" × ")}.`)];
+    }
+    if(kind===4){
+      return [task(`Schreibe als Produkt und berechne: ${base}^${exponent} (Antwort z. B. ${Array(exponent).fill(base).join(" * ")} = ${value})`,
+        `${Array(exponent).fill(base).join(" * ")} = ${value}`,"",
+        `Die Basis ${base} wird ${exponent}-mal miteinander multipliziert.`)];
+    }
+    const product=Array(exponent).fill(base).join(" × ");
+    return [task(`Schreibe als Potenz und berechne: ${product} = ?`,
+      `${base}^${exponent} = ${value}`,"",
+      `Es gibt ${exponent} gleiche Faktoren ${base}. Deshalb lautet die Potenz ${base}^${exponent} und ihr Wert ist ${value}.`)];
   }
   if(type==="rechner"){
     const tasks=[
@@ -140,10 +226,10 @@ function make(type){
   const types=["zahlen","sub","um","klammern","division","rest","mal","potenzen"];
   return make(types[rnd(0,types.length-1)]);
 }
-function normalize(s){return String(s).toLowerCase().trim().replace(/,/g,".").replace(/\s+/g," ").replace(/kilometer/g,"km").replace(/meter/g,"m").replace(/gramm/g,"g").replace(/kilogramm/g,"kg").replace(/liter/g,"l").replace(/milliliter/g,"ml");}
+function normalize(s){return String(s).toLowerCase().trim().replace(/,/g,".").replace(/[×·]/g,"*").replace(/\s+/g," ").replace(/\s*\*\s*/g," * ").replace(/\s*=\s*/g," = ").replace(/kilometer/g,"km").replace(/meter/g,"m").replace(/gramm/g,"g").replace(/kilogramm/g,"kg").replace(/liter/g,"l").replace(/milliliter/g,"ml");}
 function generate(){
   current=[];totalRight=0;totalChecked=0;points=0;
-  const type=$("topic").value;
+  const type=activeTopic;
   const target=type==="rechner"?5:10;
   let attempts=0;
   while(current.length<target && attempts<100){
@@ -183,8 +269,115 @@ function checkOne(i,el){
   else{feedback.innerHTML=powerHTML(`Noch nicht ganz. Richtige Lösung: ${t.answer}${t.unit ? " "+t.unit : ""}${t.explain ? " – "+t.explain : ""}. Du kannst die Musterlösung zusätzlich öffnen.`);feedback.className="feedback wrong";}
   input.disabled=true;el.querySelector(".check").disabled=true;stats();
 }
+
+let additionActive=false, additionTime=4, additionRemaining=4, additionRight=0, additionWrong=0, additionCount=0, additionCurrent=null, additionInterval=null, additionAdvance=null;
+function additionQuestion(){
+  const mode=rnd(0,3);
+  let a,b,answer,question;
+  if(mode===0){a=rnd(1,20);b=rnd(1,20);answer=a+b;question=`${a} + ${b} = ?`;}
+  else if(mode===1){a=rnd(2,9)*10;b=rnd(1,9)*10;answer=a+b;question=`${a} + ${b} = ?`;}
+  else if(mode===2){a=rnd(1,9)*100;b=rnd(1,9)*100;answer=a+b;question=`${fmt(a)} + ${fmt(b)} = ?`;}
+  else {a=[10,20,30,40,50,100,200,300,500,1000][rnd(0,9)];b=rnd(1,Math.min(9,Math.max(1,Math.floor(a/10))))*(a>=100?10:1);answer=b;question=`${fmt(a-b)} + ? = ${fmt(a)}`;}
+  const options=new Set([answer]);
+  while(options.size<4){
+    let offset=rnd(1,Math.max(5,Math.ceil(answer*.25)));
+    let candidate=Math.random()<.5?answer+offset:Math.max(0,answer-offset);
+    if(candidate!==answer)options.add(candidate);
+  }
+  return {question,answer,options:[...options].sort(()=>Math.random()-.5)};
+}
+function showAdditionQuestion(){
+  clearInterval(additionInterval);clearTimeout(additionAdvance);
+  if(!additionActive)return;
+  additionCurrent=additionQuestion();
+  additionRemaining=additionTime;
+  $("additionQuestion").textContent=additionCurrent.question;
+  $("additionFeedback").textContent="Schnell rechnen und Ergebnis anklicken!";
+  $("additionFeedback").className="feedback";
+  $("additionChoices").innerHTML="";
+  additionCurrent.options.forEach(value=>{
+    const btn=document.createElement("button");
+    btn.type="button";btn.textContent=fmt(value);
+    btn.addEventListener("click",()=>answerAddition(value));
+    $("additionChoices").appendChild(btn);
+  });
+  updateAdditionStats();
+  additionInterval=setInterval(()=>{
+    additionRemaining--;
+    updateAdditionStats();
+    if(additionRemaining<=0){
+      clearInterval(additionInterval);
+      if(!additionActive)return;
+      additionWrong++;additionCount++;
+      $("additionFeedback").textContent="Zeit abgelaufen! Nächste Aufgabe.";
+      $("additionFeedback").className="feedback wrong show";
+      $("additionChoices").querySelectorAll("button").forEach(b=>b.disabled=true);
+      updateAdditionStats();
+      additionAdvance=setTimeout(showAdditionQuestion,350);
+    }
+  },1000);
+}
+function answerAddition(value){
+  if(!additionActive||!additionCurrent)return;
+  clearInterval(additionInterval);
+  additionCount++;
+  if(value===additionCurrent.answer){
+    additionRight++;
+    $("additionFeedback").textContent="Richtig!";
+    $("additionFeedback").className="feedback correct show";
+  }else{
+    additionWrong++;
+    $("additionFeedback").textContent="Falsch! Weiter zur nächsten Aufgabe.";
+    $("additionFeedback").className="feedback wrong show";
+  }
+  $("additionChoices").querySelectorAll("button").forEach(b=>b.disabled=true);
+  updateAdditionStats();
+  additionAdvance=setTimeout(showAdditionQuestion,350);
+}
+function updateAdditionStats(){
+  $("additionRight").textContent=additionRight;
+  $("additionWrong").textContent=additionWrong;
+  $("additionCount").textContent=additionCount;
+  $("additionTimer").textContent=additionRemaining;
+}
+function startAddition(){
+  clearInterval(additionInterval);clearTimeout(additionAdvance);
+  additionActive=true;
+  additionTime=Number($("additionDuration").value);
+  additionRemaining=additionTime;additionRight=0;additionWrong=0;additionCount=0;
+  $("additionResult").hidden=true;
+  $("startAddition").textContent="↻ Neu starten";
+  $("additionDuration").disabled=true;
+  updateAdditionStats();showAdditionQuestion();
+}
+function endAddition(){
+  additionActive=false;clearInterval(additionInterval);clearTimeout(additionAdvance);
+  $("additionDuration").disabled=false;
+  $("additionQuestion").textContent="Runde beendet!";
+  $("additionChoices").innerHTML="";
+  $("additionFeedback").textContent="Gut gemacht! Starte eine neue Runde, wenn du möchtest.";
+  $("additionFeedback").className="feedback correct show";
+  $("additionResult").hidden=false;
+  $("additionResult").innerHTML=`<b>Dein Ergebnis:</b> ${additionRight} richtige Antworten, ${additionWrong} falsche Antworten bzw. Zeitüberschreitungen und ${additionCount} beantwortete Aufgaben.`;
+  $("startAddition").textContent="🔄 Neue Runde";
+}
 function stats(){$("right").textContent=totalRight;$("checked").textContent=totalChecked;$("points").textContent=points;}
+const topicNames={mix:"Gemischte Runde",additionZeit:"Addition auf Zeit",zahlen:"Vorgänger & Nachfolger",sub:"Subtraktion",um:"Umrechnen",klammern:"Klammeraufgaben",division:"Division ohne Rest",rest:"Division mit Rest",mal:"Multiplikation",potenzen:"Potenzen – Einstieg",rechner:"Potenzen mit Taschenrechner"};
+document.querySelectorAll(".register-tab").forEach(tab=>tab.addEventListener("click",()=>{
+  activeTopic=tab.dataset.topic;
+  document.querySelectorAll(".register-tab").forEach(x=>x.classList.toggle("active",x===tab));
+  $("selectedTopic").textContent=topicNames[activeTopic];
+  const timed=activeTopic==="additionZeit";
+  $("timedAddition").hidden=!timed;
+  $("tasks").hidden=timed;
+  $("checkAll").hidden=timed;
+  $("newRound").hidden=timed;
+  if(timed){clearInterval(additionInterval);clearTimeout(additionAdvance);additionActive=false;$("additionDuration").disabled=false;$("additionTimer").textContent=$("additionDuration").value;$("additionQuestion").textContent="? + ? = ?";$("additionChoices").innerHTML="";$("additionFeedback").textContent="Drücke auf „Start“, wenn du bereit bist.";$("additionFeedback").className="feedback";$("additionResult").hidden=true;$("startAddition").textContent="▶ Start";additionRight=0;additionWrong=0;additionCount=0;additionRemaining=Number($("additionDuration").value);updateAdditionStats();}
+  else generate();
+}));
 $("newRound").addEventListener("click",generate);
+$("startAddition").addEventListener("click",startAddition);
+$("additionDuration").addEventListener("change",()=>{$("additionTimer").textContent=$("additionDuration").value;});
 $("checkAll").addEventListener("click",()=>[...$("tasks").children].forEach((el,i)=>checkOne(i,el)));
 generate();
 </script>
