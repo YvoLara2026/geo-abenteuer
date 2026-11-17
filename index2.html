@@ -11,7 +11,17 @@ body{margin:0;font-family:"Trebuchet MS",Arial,sans-serif;color:var(--ink);backg
 header{padding:22px 16px 18px;text-align:center;background:#fffdf2;border-bottom:4px solid #bde0fe}
 header h1{margin:0;font-size:clamp(1.8rem,4vw,3rem);font-weight:800}
 header p{margin:8px 0 0;font-size:1.05rem}
-main{max-width:1100px;margin:auto;padding:18px 18px 34px}
+main{max-width:1250px;margin:auto;padding:18px 18px 34px}
+.layout{display:grid;grid-template-columns:235px minmax(0,1fr);gap:18px;align-items:start}
+.sidebar{background:#fff;border:2px solid var(--line);border-radius:22px;padding:15px;box-shadow:0 5px 0 #c7ddeb;position:sticky;top:14px}
+.sidebar h2{font-size:1.15rem;margin:2px 4px 12px}
+.topic-list{display:grid;gap:8px}
+.topic-link{width:100%;text-align:left;background:#eef6ff;color:var(--ink);box-shadow:none;border:2px solid #d9e8f5;padding:10px 12px;border-radius:12px}
+.topic-link:hover{background:#dceeff}
+.topic-link.active{background:var(--blue);color:white;border-color:var(--blue);box-shadow:0 3px 0 #2164bd}
+.content{min-width:0}
+@media(max-width:760px){.layout{grid-template-columns:1fr}.sidebar{position:static}.topic-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:420px){.topic-list{grid-template-columns:1fr}}
 .toplink{text-align:center;margin:0 0 18px}
 a.home-link{display:inline-block;background:#6c7a89;color:white;padding:10px 16px;border-radius:13px;text-decoration:none;font-weight:bold;box-shadow:0 3px 0 #46525e}
 .panel,.task{background:#fff;border:2px solid var(--line);border-radius:22px;padding:18px;margin-bottom:16px;box-shadow:0 5px 0 #c7ddeb}
@@ -43,6 +53,22 @@ button.secondary{background:#6c7a89;box-shadow:0 3px 0 #46525e}button.green{back
 </header>
 <main>
   <div class="toplink"><a class="home-link" href="index.html">🌍 Zurück zum Geo-Abenteuer</a></div>
+  <div class="layout">
+  <aside class="sidebar" aria-label="Themenregister">
+    <h2>📚 Themen</h2>
+    <nav class="topic-list" id="topicNav">
+      <button type="button" class="topic-link active" data-topic="mix">🎲 Gemischte Runde</button>
+      <button type="button" class="topic-link" data-topic="zahlen">🔢 Vorgänger und Nachfolger</button>
+      <button type="button" class="topic-link" data-topic="sub">➖ Subtraktion</button>
+      <button type="button" class="topic-link" data-topic="um">📏 Schwieriges Umrechnen</button>
+      <button type="button" class="topic-link" data-topic="klammern">🧩 Klammeraufgaben</button>
+      <button type="button" class="topic-link" data-topic="division">➗ Division ohne Rest</button>
+      <button type="button" class="topic-link" data-topic="rest">🔍 Division mit Rest</button>
+      <button type="button" class="topic-link" data-topic="mal">✖️ Multiplikation</button>
+      <button type="button" class="topic-link" data-topic="vielfache">🌟 Vielfache</button>
+    </nav>
+  </aside>
+  <div class="content">
   <section class="panel">
     <strong>Wähle ein Thema:</strong>
     <div class="controls" style="margin-top:10px">
@@ -73,6 +99,8 @@ button.secondary{background:#6c7a89;box-shadow:0 3px 0 #46525e}button.green{back
     <p style="margin-bottom:0">Rechne zuerst selbst. Prüfe danach deine Antwort. Lies bei Fehlern die richtige Lösung und starte eine neue Runde.</p>
   </section>
   <div class="footer">Mathe-Training · Klasse 5 · Die Aufgaben werden bei jeder Runde neu erstellt.</div>
+  </div>
+  </div>
 </main>
 <script>
 const $=id=>document.getElementById(id);
@@ -184,8 +212,22 @@ function checkOne(i,el){
   input.disabled=true;el.querySelector(".check").disabled=true;stats();
 }
 function stats(){$("right").textContent=totalRight;$("checked").textContent=totalChecked;$("points").textContent=points;}
+function setActiveTopic(){
+  document.querySelectorAll(".topic-link").forEach(btn=>{
+    const active=btn.dataset.topic===$("topic").value;
+    btn.classList.toggle("active",active);
+    btn.setAttribute("aria-pressed",String(active));
+  });
+}
+document.querySelectorAll(".topic-link").forEach(btn=>btn.addEventListener("click",()=>{
+  $("topic").value=btn.dataset.topic;
+  setActiveTopic();
+  generate();
+}));
+$("topic").addEventListener("change",()=>{setActiveTopic();generate();});
 $("newRound").addEventListener("click",generate);
 $("checkAll").addEventListener("click",()=>[...$("tasks").children].forEach((el,i)=>checkOne(i,el)));
+setActiveTopic();
 generate();
 </script>
 </body>
