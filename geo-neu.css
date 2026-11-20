@@ -1,0 +1,44 @@
+/* geo-neu.css – Design-Verbesserungen für geo.html (nach dem alten <style> einbinden) */
+body{background:linear-gradient(160deg,#d8f1ff 0%,#fff6dc 100%) fixed}
+header{background:linear-gradient(135deg,#3d8bfd,#6a5cff);border-bottom:0;border-radius:0 0 28px 28px;box-shadow:0 6px 0 rgba(24,49,83,.12)}
+header h1,header p{color:#fff}
+.panel{border-radius:24px}
+.topic{transition:transform .12s,border-color .12s}
+.topic:hover{transform:translateY(-2px);border-color:#3d8bfd}
+
+.question{font-size:1.35rem;line-height:1.35;background:#fff8dc;border-left:6px solid #f2a900;border-radius:14px;padding:14px 16px}
+.instr{font-size:.95rem;font-weight:bold;color:#526779;margin-bottom:10px}
+.instr.multi{color:#8a5a00;background:#fff4bf;display:inline-block;padding:6px 12px;border-radius:99px}
+
+.answers{grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.answer{display:flex;align-items:center;gap:12px;width:100%;min-height:60px;padding:14px 16px;font-size:1.05rem;text-align:left;color:var(--ink);background:#fff;border:3px solid #d9e5ef;border-radius:16px;box-shadow:0 3px 0 #d3e0eb}
+.answer:hover:not(:disabled){border-color:#3d8bfd;background:#f0f7ff}
+.answer .mark{flex:0 0 26px;height:26px;border:3px solid #9bb3c7;border-radius:50%;background:#fff}
+.answers.multi .answer .mark{border-radius:7px}
+.answer .txt{flex:1}
+.answer .badge{font-size:.85rem;font-weight:bold;white-space:nowrap}
+.answer:disabled:not(.correct):not(.wrong){opacity:.5}
+
+.answer.chosen{border-color:#3d8bfd;background:#e3f1ff}
+.answer.chosen .mark{background:#3d8bfd;border-color:#3d8bfd;box-shadow:inset 0 0 0 4px #fff}
+
+.answer.correct,.answer.correct:disabled{opacity:1;border-color:#20a46b;background:#dcfbe9;box-shadow:0 3px 0 #14764b;animation:pop .35s}
+.answer.correct .mark{background:#20a46b;border-color:#20a46b;box-shadow:inset 0 0 0 4px #dcfbe9}
+.answer.correct .badge{color:#0d6a40}
+
+.answer.wrong,.answer.wrong:disabled{opacity:1;border-color:#e5533d;background:#ffe6e0;box-shadow:0 3px 0 #b73a27;animation:shake .4s}
+.answer.wrong .mark{background:#e5533d;border-color:#e5533d;box-shadow:inset 0 0 0 4px #ffe6e0}
+.answer.wrong .badge{color:#a3301f}
+.answer.wrong .txt{text-decoration:line-through;text-decoration-thickness:2px}
+
+.feedback{font-size:1.1rem;border-radius:16px;padding:16px 18px}
+.feedback.good{background:#dcfbe9;border:3px solid #20a46b;color:#0d4f32}
+.feedback.bad{background:#ffe6e0;border:3px solid #e5533d;color:#7a2417}
+.feedback .head{display:block;font-size:1.4rem;margin-bottom:4px}
+
+#checkBtn,#nextBtn,#showBtn{padding:13px 20px;font-size:1.05rem}
+
+@keyframes pop{0%{transform:scale(.96)}60%{transform:scale(1.03)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+@media(prefers-reduced-motion:reduce){.answer,.topic{animation:none!important;transition:none!important}}
+@media(max-width:600px){.answers{grid-template-columns:1fr}.question{font-size:1.15rem}#checkBtn,#nextBtn{flex:1}}
