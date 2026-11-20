@@ -45,6 +45,7 @@ footer{text-align:center;padding:12px;color:#536a7b;font-size:.85rem}
 @media(max-width:600px){.wrap{padding:10px}.panel{padding:13px}.question{font-size:1.1rem}}
 </style>
 </head>
+<link rel="stylesheet" href="geo-neu.css">
 <body>
 <header><h1>🌍 Geo-Abenteuer</h1><p>Dein interaktiver Geo-Trainer · Klasse 5 Gymnasium</p></header>
 <main class="wrap">
@@ -317,5 +318,6 @@ $("newRoundBtn").onclick=()=>{if(!state.progress.every((p,i)=>p.done>=topics[i].
 $("resetBtn").onclick=()=>{if(confirm("Möchtest du wirklich alle gespeicherten Ergebnisse löschen?")){localStorage.removeItem("geoAbenteuerV2");state={round:1,active:0,progress:topics.map(()=>({done:0,score:0,answers:[]})),questionOrder:topics.map(t=>t.items.map((_,i)=>i)),current:0,selected:null,checked:false};render()}};
 load();render();
 </script>
+<script src="geo-neu.js"></script>
 </body>
 </html>
